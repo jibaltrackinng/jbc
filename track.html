@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تتبع الشحنات - جبال البصرة للشحن الدولي</title>
+    <!-- استدعاء Bootstrap 5 وأيقونات FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --jbc-navy: #0f2c59;
+            --jbc-orange: #f97316;
+            --jbc-light: #f8fafc;
+        }
+        body {
+            background-color: var(--jbc-light);
+            font-family: 'Tahoma', sans-serif;
+            color: #334155;
+        }
+        /* شريط التنقل العلوي البسيط للرجوع للرئيسية */
+        .top-nav {
+            background-color: var(--jbc-navy);
+            padding: 15px 0;
+            border-bottom: 3px solid var(--jbc-orange);
+        }
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .hero-banner {
+            background: linear-gradient(135deg, var(--jbc-navy), #1e3a8a);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        .tracker-card {
+            max-width: 650px;
+            margin: -30px auto 50px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-top: 5px solid var(--jbc-orange);
+        }
+        .form-control-lg {
+            border-radius: 10px 0 0 10px;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #e2e8f0;
+        }
+        .form-control-lg:focus {
+            border-color: var(--jbc-orange);
+            box-shadow: none;
+        }
+        .btn-track {
+            border-radius: 0 10px 10px 0;
+            padding: 0 30px;
+            font-weight: bold;
+            font-size: 16px;
+            background-color: var(--jbc-orange);
+            border: none;
+            color: white;
+            transition: background 0.3s;
+        }
+        .btn-track:hover {
+            background-color: #ea580c;
+            color: white;
+        }
+        .result-box {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .info-card {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-card {
+            background: linear-gradient(135deg, var(--jbc-navy), #1e3a8a);
+            color: white;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شريط علوي -->
+    <div class="top-nav">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="index.html"><i class="fa-solid fa-arrow-right ms-2"></i> العودة للرئيسية</a>
+            <span class="text-white opacity-75">جبال البصرة للشحن الدولي</span>
+        </div>
+    </div>
+
+    <div class="hero-banner">
+        <div class="container">
+            <h2><i class="fa-solid fa-truck-fast ms-2"></i> تتبع الشحنات</h2>
+            <p class="text-light opacity-75 mb-0">تعرف على حالة ومسار شحنتك بكل سهولة وشفافية</p>
+        </div>
+    </div>
+
+    <!-- صندوق البحث -->
+    <div class="container">
+        <div class="tracker-card">
+            <h4 class="text-center mb-3 fw-bold" style="color: var(--jbc-navy);">استعلام عن شحنة</h4>
+            <p class="text-muted text-center mb-4">أدخل **رقم الشحنة** في الحقل أدناه واضغط على زر البحث.</p>
+            
+            <div class="input-group mb-3">
+                <input type="text" id="searchRef" class="form-control form-control-lg" placeholder="أدخل رقم الشحنة (مثال: jbal600)">
+                <button class="btn btn-track" onclick="trackShipment()">
+                    تتبع الشحنة
+                </button>
+            </div>
+
+            <!-- رسالة الخطأ -->
+            <div id="errorBox" class="alert alert-danger mt-3 text-center" style="display: none; border-radius: 10px;"></div>
+
+            <!-- تفاصيل الشحنة (النتيجة) -->
+            <div id="resultBox" class="result-box">
+                
+                <!-- 1. حالة الشحنة (في أول خانة وبارزة جداً) -->
+                <div class="status-card">
+                    <span class="d-block text-light opacity-75 small mb-1">حالة الشحنة الحالية:</span>
+                    <span id="resStatus" class="fs-4 fw-bold" style="color: #38bdf8;">جاري التحميل...</span>
+                </div>
+
+                <h6 class="text-secondary fw-bold mb-3"><i class="fa-solid fa-circle-info ms-1"></i> تفاصيل الشحنة:</h6>
+                
+                <div class="info-card">
+                    <span class="text-muted">رقم الشحنة:</span>
+                    <span id="resRef" class="fw-bold text-dark"></span>
+                </div>
+                
+                <div class="info-card">
+                    <span class="text-muted">طريقة الشحن:</span>
+                    <span id="resMethod" class="fw-bold text-dark"></span>
+                </div>
+                
+                <!-- تم استبدال الوجهة النهائية بـ (الشحن من) -->
+                <div class="info-card">
+                    <span class="text-muted">الشحن من:</span>
+                    <span id="resDestination" class="fw-bold text-dark"></span>
+                </div>
+                
+                <div class="info-card">
+                    <span class="text-muted">الوزن / الحجم:</span>
+                    <span id="resWeight" class="fw-bold text-dark"></span>
+                </div>
+
+                <!-- تاريخ الوصول المتوقع (في آخر خانة) -->
+                <div class="info-card" style="border-right: 4px solid var(--jbc-orange);">
+                    <span class="text-muted"><i class="fa-regular fa-calendar-days text-orange ms-1" style="color: var(--jbc-orange);"></i> تاريخ الوصول المتوقع:</span>
+                    <span id="resDate" class="fw-bold text-dark"></span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // رابط Web App الخاص بـ Google Apps Script
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_UYDISlOQ8YY_IzW6X_GEzDvlkJd0aikk8xUQaNBYq-W2-NooP45pD0oUXJy2HZoLTQ/exec";
+
+        async function trackShipment() {
+            let ref = document.getElementById('searchRef').value.trim();
+            let resultBox = document.getElementById('resultBox');
+            let errorBox = document.getElementById('errorBox');
+            
+            resultBox.style.display = 'none';
+            errorBox.style.display = 'none';
+
+            if (!ref) {
+                errorBox.innerText = "يرجى إدخال رقم الشحنة أولاً!";
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            try {
+                let response = await fetch(`${SCRIPT_URL}?ref=${ref}`);
+                let result = await response.json();
+
+                if (result.status === 'success') {
+                    let data = result.data;
+                    
+                    // تعبئة البيانات
+                    document.getElementById('resStatus').innerText = data.status; // الحالة في أول خانة
+                    document.getElementById('resRef').innerText = data.ref;
+                    document.getElementById('resMethod').innerText = data.method;
+                    document.getElementById('resDestination').innerText = data.destination; // سترتبط ببيانات الوجهة/مصدر الشحن من السجل
+                    document.getElementById('resWeight').innerText = `${data.kg} كغ / ${data.cbm} CBM`;
+                    document.getElementById('resDate').innerText = data.expDate; // التاريخ في آخر خانة
+
+                    resultBox.style.display = 'block';
+                } else {
+                    errorBox.innerText = result.message || "عذراً، لم يتم العثور على شحنة بهذا الرقم.";
+                    errorBox.style.display = 'block';
+                }
+            } catch (error) {
+                errorBox.innerText = "حدث خطأ في الاتصال بالخادم. يرجى المحاولة لاحقاً.";
+                errorBox.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
