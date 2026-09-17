@@ -35,7 +35,7 @@
             text-align: center;
         }
         .tracker-card {
-            max-width: 650px;
+            max-width: 700px;
             margin: -30px auto 50px auto;
             background: white;
             padding: 35px;
@@ -86,14 +86,70 @@
             justify-content: space-between;
             align-items: center;
         }
-        .status-card {
-            background: linear-gradient(135deg, var(--jbc-navy), #1e3a8a);
-            color: white;
-            padding: 18px;
+        
+        /* تنسيق مسار المراحل الإيقوني (Timeline) */
+        .timeline-container {
+            background: white;
+            padding: 20px;
             border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
         }
+        .timeline-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 15px;
+        }
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 10px;
+            left: 10px;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+        .timeline-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        .timeline-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px auto;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .timeline-step.active .timeline-icon {
+            background: var(--jbc-orange);
+            color: white;
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
+        }
+        .timeline-step.completed .timeline-icon {
+            background: var(--jbc-navy);
+            color: white;
+        }
+        .timeline-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #64748b;
+        }
+        .timeline-step.active .timeline-title, .timeline-step.completed .timeline-title {
+            color: var(--jbc-navy);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -136,10 +192,36 @@
             <!-- تفاصيل الشحنة (النتيجة) -->
             <div id="resultBox" class="result-box">
                 
-                <!-- 1. حالة الشحنة -->
-                <div class="status-card">
-                    <span class="d-block text-light opacity-75 small mb-1">حالة الشحنة الحالية:</span>
-                    <span id="resStatus" class="fs-4 fw-bold" style="color: #38bdf8;">جاري التحميل...</span>
+                <!-- خط سير الشحنة الإيقوني (Timeline) -->
+                <div class="timeline-container">
+                    <span class="d-block text-muted small mb-3 fw-bold text-center">مراحل رحلة الشحنة:</span>
+                    <div class="timeline-steps">
+                        <!-- المرحلة 1 -->
+                        <div class="timeline-step" id="step-1">
+                            <div class="timeline-icon"><i class="fa-solid fa-file-circle-plus"></i></div>
+                            <div class="timeline-title">تم الإنشاء</div>
+                        </div>
+                        <!-- المرحلة 2 -->
+                        <div class="timeline-step" id="step-2">
+                            <div class="timeline-icon"><i class="fa-solid fa-warehouse"></i></div>
+                            <div class="timeline-title">تم الاستلام بالمخزن</div>
+                        </div>
+                        <!-- المرحلة 3 -->
+                        <div class="timeline-step" id="step-3">
+                            <div class="timeline-icon"><i class="fa-solid fa-ship"></i></div>
+                            <div class="timeline-title">في طور الشحن</div>
+                        </div>
+                        <!-- المرحلة 4 -->
+                        <div class="timeline-step" id="step-4">
+                            <div class="timeline-icon"><i class="fa-solid fa-location-dot"></i></div>
+                            <div class="timeline-title">وصلت للوجهة</div>
+                        </div>
+                        <!-- المرحلة 5 -->
+                        <div class="timeline-step" id="step-5">
+                            <div class="timeline-icon"><i class="fa-solid fa-circle-check"></i></div>
+                            <div class="timeline-title">تم التسليم</div>
+                        </div>
+                    </div>
                 </div>
 
                 <h6 class="text-secondary fw-bold mb-3"><i class="fa-solid fa-circle-info ms-1"></i> تفاصيل الشحنة:</h6>
@@ -185,6 +267,44 @@
         // رابط Web App الخاص بـ Google Apps Script
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_UYDISlOQ8YY_IzW6X_GEzDvlkJd0aikk8xUQaNBYq-W2-NooP45pD0oUXJy2HZoLTQ/exec";
 
+        // مصفوفة المراحل بالترتيب الزمني
+        const stagesList = [
+            "تم الإنشاء",
+            "تم الاستلام بالمخزن",
+            "في طور الشحن",
+            "وصلت الى الوجهة",
+            "تم التسليم إلى العميل"
+        ];
+
+        function updateTimeline(currentStatus) {
+            // إعادة ضبط كافة المراحل للافتراضي
+            for (let i = 1; i <= 5; i++) {
+                let el = document.getElementById(`step-${i}`);
+                el.classList.remove('active', 'completed');
+            }
+
+            // مطابقة الحالة الحالية وتلوين المراحل السابقة والحالية
+            let currentIndex = -1;
+            for (let i = 0; i < stagesList.length; i++) {
+                if (currentStatus.includes(stagesList[i]) || stagesList[i].includes(currentStatus)) {
+                    currentIndex = i;
+                    break;
+                }
+            }
+
+            // إذا لم يتم العثور على مطابقة دقيقة، نفترض المرحلة الأولى نشطة
+            if (currentIndex === -1) currentIndex = 0;
+
+            for (let i = 0; i < stagesList.length; i++) {
+                let stepEl = document.getElementById(`step-${i + 1}`);
+                if (i < currentIndex) {
+                    stepEl.classList.add('completed'); // المراحل المنجزة سابقاً
+                } else if (i === currentIndex) {
+                    stepEl.classList.add('active');    // المرحلة الحالية النشطة
+                }
+            }
+        }
+
         async function trackShipment() {
             let ref = document.getElementById('searchRef').value.trim();
             let resultBox = document.getElementById('resultBox');
@@ -203,23 +323,20 @@
                 let response = await fetch(`${SCRIPT_URL}?ref=${ref}`);
                 let result = await response.json();
 
-                // طباعة البيانات في الكونسول للتأكد من وصول قيمة العمود M
-                console.log("البيانات المستلمة من السيرفر:", result);
-
                 if (result.status === 'success') {
                     let data = result.data;
                     
-                    // تعبئة البيانات الأساسية
-                    document.getElementById('resStatus').innerText = data.status || '-'; 
+                    // تحديث شريط المراحل الإيقوني بناءً على الحالة الواردة من جدول البيانات
+                    updateTimeline(data.status || "تم الإنشاء");
+
                     document.getElementById('resRef').innerText = data.ref || '-';
                     document.getElementById('resMethod').innerText = data.method || '-';
                     document.getElementById('resDestination').innerText = data.destination || '-'; 
                     document.getElementById('resWeight').innerText = `${data.kg || 0} كغ / ${data.cbm || 0} CBM`;
                     
-                    // تعبئة تاريخ الاستلام القادم من العمود M مباشرة وبشكل صريح
+                    // تاريخ الاستلام من العمود M
                     let receiveDateVal = data.receiveDate;
                     if (receiveDateVal && receiveDateVal !== "" && receiveDateVal !== "-") {
-                        document.getElementById('resReceiveDatepreference' || 'resReceiveDate').innerText = receiveDateVal;
                         document.getElementById('resReceiveDate').innerText = receiveDateVal;
                     } else {
                         document.getElementById('resReceiveDate').innerText = "قيد الانتظار / لم يُحدد";
