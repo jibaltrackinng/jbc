@@ -177,7 +177,7 @@
     <div class="container">
         <div class="tracker-card">
             <h4 class="text-center mb-3 fw-bold" style="color: var(--jbc-navy);">استعلام عن شحنة</h4>
-            <p class="text-muted text-center mb-4">أدخل **رقم الشحنة** في الحقل أدناه واضغط على زر البحث.</p>
+            <p class="text-muted text-center mb-4">أدخل <strong>رقم الشحنة</strong> في الحقل أدناه واضغط على زر البحث.</p>
             
             <div class="input-group mb-3">
                 <input type="text" id="searchRef" class="form-control form-control-lg" placeholder="أدخل رقم الشحنة (مثال: jbal613)">
@@ -246,7 +246,7 @@
                     <span id="resWeight" class="fw-bold text-dark"></span>
                 </div>
 
-                <!-- تاريخ استلام الشحنة الفعلي (من العمود M) -->
+                <!-- تاريخ استلام الشحنة الفعلي -->
                 <div class="info-card" style="border-right: 4px solid var(--jbc-navy);">
                     <span class="text-muted"><i class="fa-regular fa-calendar-check ms-1" style="color: var(--jbc-navy);"></i> تاريخ استلام الشحنة:</span>
                     <span id="resReceiveDate" class="fw-bold text-dark">-</span>
@@ -263,7 +263,7 @@
         </div>
     </div>
 
-<script>
+    <script>
         // رابط Web App الخاص بـ Google Apps Script
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzklreBRhFuCvSC4CQB7GC3uAXSgeidET9r4via-lg9/dev";
 
@@ -279,7 +279,7 @@
         function updateTimeline(currentStatus) {
             for (let i = 1; i <= 5; i++) {
                 let el = document.getElementById(`step-${i}`);
-                if(el) el.classList.remove('active', 'completed');
+                if (el) el.classList.remove('active', 'completed');
             }
 
             let currentIndex = -1;
@@ -294,7 +294,7 @@
 
             for (let i = 0; i < stagesList.length; i++) {
                 let stepEl = document.getElementById(`step-${i + 1}`);
-                if(stepEl) {
+                if (stepEl) {
                     if (i < currentIndex) {
                         stepEl.classList.add('completed');
                     } else if (i === currentIndex) {
@@ -323,7 +323,6 @@
             }
 
             try {
-                console.log("جاري الاتصال بالرابط...");
                 let response = await fetch(`${SCRIPT_URL}?ref=${encodeURIComponent(ref)}`);
                 let result = await response.json();
 
@@ -337,7 +336,7 @@
                     document.getElementById('resDestination').innerText = data.destination || '-'; 
                     document.getElementById('resWeight').innerText = `${data.kg || 0} KG / ${data.cbm || 0} CBM`;
 
-                    // معالجة تاريخ الاستلام (العمود M) بشكل آمن وخالٍ من الأخطاء
+                    // معالجة تاريخ الاستلام بشكل آمن
                     let finalReceiveDate = "قيد الانتظار / لم يُحدد";
                     let receiveDateVal = data.receiveDate;
                     
@@ -360,3 +359,5 @@
             }
         }
     </script>
+</body>
+</html>
