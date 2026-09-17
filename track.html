@@ -263,7 +263,7 @@
         </div>
     </div>
 
-    <script>
+  <script>
         // رابط Web App الخاص بـ Google Apps Script
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_UYDISlOQ8YY_IzW6X_GEzDvlkJd0aikk8xUQaNBYq-W2-NooP45pD0oUXJy2HZoLTQ/exec";
 
@@ -277,13 +277,11 @@
         ];
 
         function updateTimeline(currentStatus) {
-            // إعادة ضبط كافة المراحل للافتراضي
             for (let i = 1; i <= 5; i++) {
                 let el = document.getElementById(`step-${i}`);
-                el.classList.remove('active', 'completed');
+                if(el) el.classList.remove('active', 'completed');
             }
 
-            // مطابقة الحالة الحالية وتلوين المراحل السابقة والحالية
             let currentIndex = -1;
             for (let i = 0; i < stagesList.length; i++) {
                 if (currentStatus.includes(stagesList[i]) || stagesList[i].includes(currentStatus)) {
@@ -292,23 +290,28 @@
                 }
             }
 
-            // إذا لم يتم العثور على مطابقة دقيقة، نفترض المرحلة الأولى نشطة
             if (currentIndex === -1) currentIndex = 0;
 
             for (let i = 0; i < stagesList.length; i++) {
                 let stepEl = document.getElementById(`step-${i + 1}`);
-                if (i < currentIndex) {
-                    stepEl.classList.add('completed'); // المراحل المنجزة سابقاً
-                } else if (i === currentIndex) {
-                    stepEl.classList.add('active');    // المرحلة الحالية النشطة
+                if(stepEl) {
+                    if (i < currentIndex) {
+                        stepEl.classList.add('completed');
+                    } else if (i === currentIndex) {
+                        stepEl.classList.add('active');
+                    }
                 }
             }
         }
 
         async function trackShipment() {
-            let ref = document.getElementById('searchRef').value.trim();
+            let refInput = document.getElementById('searchRef');
             let resultBox = document.getElementById('resultBox');
             let errorBox = document.getElementById('errorBox');
+            
+            if (!refInput) return;
+
+            let ref = refInput.value.trim();
             
             resultBox.style.display = 'none';
             errorBox.style.display = 'none';
@@ -320,13 +323,13 @@
             }
 
             try {
-                let response = await fetch(`${SCRIPT_URL}?ref=${ref}`);
+                console.log("جاري الاتصال بالرابط...");
+                let response = await fetch(`${SCRIPT_URL}?ref=${encodeURIComponent(ref)}`);
                 let result = await response.json();
 
                 if (result.status === 'success') {
                     let data = result.data;
                     
-                    // تحديث شريط المراحل الإيقوني بناءً على الحالة الواردة من جدول البيانات
                     updateTimeline(data.status || "تم الإنشاء");
 
                     document.getElementById('resRef').innerText = data.ref || '-';
@@ -334,7 +337,7 @@
                     document.getElementById('resDestination').innerText = data.destination || '-'; 
                     document.getElementById('resWeight').innerText = `${data.kg || 0} KG / ${data.cbm || 0} CBM`;
                     
-                    // تاريخ الاستلام من العمود M (مع ضبط القيمة وإظهار أول 10 أحرف بصيغة YYYY-MM-DD)
+                    // معالجة تاريخ الاستلام (العمود M)
                     let receiveDateVal = data.receiveDate;
                     if (receiveDateVal && receiveDateVal !== "" && receiveDateVal !== "-") {
                         let cleanDate = receiveDateVal.toString().substring(0, 10);
@@ -357,5 +360,3 @@
             }
         }
     </script>
-</body>
-</html>
