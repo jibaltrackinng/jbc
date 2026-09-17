@@ -263,9 +263,9 @@
         </div>
     </div>
 
-  <script>
+<script>
         // رابط Web App الخاص بـ Google Apps Script
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-NazVp-GVALVfJzNKsHzT1pfY-X6qqu6ty-VBkAkBnypS9kka4MteL3VIK_RHnynbtg/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_UYDISlOQ8YY_IzW6X_GEzDvlkJd0aikk8xUQaNBYq-W2-NooP45pD0oUXJy2HZoLTQ/exec";
 
         // مصفوفة المراحل بالترتيب الزمني
         const stagesList = [
@@ -337,13 +337,14 @@
                     document.getElementById('resDestination').innerText = data.destination || '-'; 
                     document.getElementById('resWeight').innerText = `${data.kg || 0} KG / ${data.cbm || 0} CBM`;
                     
-                    // معالجة تاريخ الاستلام (العمود M)
+                    // معالجة تاريخ الاستلام (العمود M) بشكل آمن وخالٍ من الأخطاء
+                    let finalReceiveDate = "قيد الانتظار / لم يُحدد";
                     let receiveDateVal = data.receiveDate;
+                    
                     if (receiveDateVal && receiveDateVal !== "" && receiveDateVal !== "-") {
-                        document.getElementById('resReceiveDate').innerText = cleanDate;
-                    } else {
-                        document.getElementById('resReceiveDate').innerText = "قيد الانتظار / لم يُحدد";
+                        finalReceiveDate = receiveDateVal.toString().substring(0, 10);
                     }
+                    document.getElementById('resReceiveDate').innerText = finalReceiveDate;
 
                     document.getElementById('resDate').innerText = data.expDate || '-'; 
 
