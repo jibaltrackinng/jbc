@@ -114,16 +114,14 @@
 <body>
 
     <!-- شريط التنقل -->
-    <<!-- شريط التنقل -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <!-- هنا تم إضافة الشعار بجانب الاسم -->
-                <img src="logo.png" alt="شعار جبال البصرة" style="height: 70px; width: auto;" class="ms-2 rounded">
+                <img src="logo.png" alt="شعار جبال البصرة" style="height: 50px; width: auto;" class="ms-2 rounded">
                 جبال البصرة للشحن الدولي (JBC)
             </a>
             <div class="d-flex align-items-center">
-                <a href="track.html" class="btn btn-orange btn-sm px-3 py-2">
+                <a href="#tracking-section" class="btn btn-orange btn-sm px-3 py-2">
                     <i class="fa-solid fa-truck-fast ms-1"></i> تتبع الشحنات
                 </a>
             </div>
@@ -136,11 +134,79 @@
             <h1 class="display-4 mb-3">بوابتك الموثوقة للشحن من <span class="highlight">الصين والإمارات</span> إلى العراق</h1>
             <p class="lead text-light opacity-85 mb-4">نقدم حلولاً لوجستية متكاملة، شحن بحري وجوي، خدمات التخليص الجمركي، وفحص وتجهيز البضائع باحترافية عالية.</p>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a href="track.html" class="btn btn-orange btn-lg"><i class="fa-solid fa-search ms-2"></i> تتبع الشحنات</a>
+                <a href="#tracking-section" class="btn btn-orange btn-lg"><i class="fa-solid fa-search ms-2"></i> تتبع الشحنات</a>
                 <a href="#contact" class="btn btn-outline-custom btn-lg"><i class="fa-solid fa-phone ms-2"></i> اتصل بنا</a>
             </div>
         </div>
     </header>
+
+    <!-- 🔍 قسم خانة التتبع (مضاف هنا تماماً فوق الخدمات وتحت الهيدر) -->
+    <section id="tracking-section" class="container py-5">
+        <div class="card shadow-lg border-0 p-4 p-md-5 rounded-4 bg-white">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold" style="color: var(--jbc-navy);">تتبع حالة شحنتك فورياً</h2>
+                <p class="text-muted">أدخل رقم التتبع الخاص بك لمعرفة مرحلة الشحنة وتاريخ الاستلام الفعلي بدقة</p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="input-group mb-3 shadow-sm">
+                        <input type="text" id="searchRef" class="form-control form-control-lg" placeholder="أدخل رقم الشحنة هنا (مثلاً: JBC-1001)...">
+                        <button class="btn btn-orange px-4" type="button" onclick="trackShipment()">
+                            <i class="fa-solid fa-magnifying-glass ms-1"></i> بحث
+                        </button>
+                    </div>
+                    <!-- رسالة الخطأ -->
+                    <div id="errorBox" class="alert alert-danger mt-2 text-center" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- صندوق عرض نتائج الشحنة (مخفي افتراضياً ويظهر عند جلب البيانات) -->
+            <div id="resultBox" class="mt-4" style="display: none;">
+                <hr class="my-4">
+                <h4 class="mb-3 text-center" style="color: var(--jbc-navy);">تفاصيل الشحنة</h4>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded border-start border-4 border-primary">
+                            <span class="text-muted"><i class="fa-solid fa-barcode ms-1"></i> رقم الشحنة:</span>
+                            <span id="resRef" class="fw-bold text-dark float-end">-</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded border-start border-4 border-primary">
+                            <span class="text-muted"><i class="fa-solid fa-ship ms-1"></i> طريقة الشحن:</span>
+                            <span id="resMethod" class="fw-bold text-dark float-end">-</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded border-start border-4 border-primary">
+                            <span class="text-muted"><i class="fa-solid fa-location-dot ms-1"></i> الوجهة:</span>
+                            <span id="resDestination" class="fw-bold text-dark float-end">-</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded border-start border-4 border-primary">
+                            <span class="text-muted"><i class="fa-solid fa-weight-scale ms-1"></i> الوزن / الحجم:</span>
+                            <span id="resWeight" class="fw-bold text-dark float-end">-</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded border-start border-4" style="border-color: var(--jbc-navy) !important;">
+                            <span class="text-muted"><i class="fa-regular fa-calendar-check ms-1" style="color: var(--jbc-navy);"></i> تاريخ استلام الشحنة:</span>
+                            <span id="resReceiveDate" class="fw-bold text-dark float-end">-</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded border-start border-4" style="border-color: var(--jbc-orange) !important;">
+                            <span class="text-muted"><i class="fa-solid fa-calendar-days ms-1" style="color: var(--jbc-orange);"></i> تاريخ الوصول المتوقع:</span>
+                            <span id="resDate" class="fw-bold text-dark float-end">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- خدماتنا وتطلعات الشركة -->
     <section class="container py-5">
@@ -187,9 +253,9 @@
                         تطمح شركة **جبال البصرة للشحن الدولي** لأن تكون الشريك اللوجستي الأول والرائد في تقديم خدمات الشحن والتخليص الجمركي على مستوى العراق. نلتزم ببناء جسور ثقة متينة مع التجار والمستوردين عبر تسهيل حركة التجارة الدولية، وتقليل تكاليف النقل، وضمان سلامة البضائع من مصدرها وحتى تسليمها للمستودعات.
                     </p>
                     <ul class="list-unstyled text-secondary mt-3">
-                        <li class="mb-2"><i class="fa-solid fa-check-circle text-orange ms-2" style="color: var(--jbc-orange);"></i> إدارة احترافية ومخازن مؤمنة بالكامل.</li>
-                        <li class="mb-2"><i class="fa-solid fa-check-circle text-orange ms-2" style="color: var(--jbc-orange);"></i> سرعة في الإنجاز وتخليص جمركي مرن.</li>
-                        <li class="mb-2"><i class="fa-solid fa-check-circle text-orange ms-2" style="color: var(--jbc-orange);"></i> متابعة مستمرة وتتبع دقيق لمسار الشحنات.</li>
+                        <li class="mb-2"><i class="fa-solid fa-check-circle ms-2" style="color: var(--jbc-orange);"></i> إدارة احترافية ومخازن مؤمنة بالكامل.</li>
+                        <li class="mb-2"><i class="fa-solid fa-check-circle ms-2" style="color: var(--jbc-orange);"></i> سرعة في الإنجاز وتخليص جمركي مرن.</li>
+                        <li class="mb-2"><i class="fa-solid fa-check-circle ms-2" style="color: var(--jbc-orange);"></i> متابعة مستمرة وتتبع دقيق لمسار الشحنات.</li>
                     </ul>
                 </div>
                 <div class="col-lg-6 text-center">
@@ -222,5 +288,63 @@
         </div>
     </footer>
 
+    <!-- سكريبت الاتصال وجلب بيانات الشحنة وتاريخ الاستلام -->
+    <script>
+        // ضع رابط Web App الخاص بجوجل شيت هنا
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_UYDISlOQ8YY_IzW6X_GEzDvlkJd0aikk8xUQaNBYq-W2-NooP45pD0oUXJy2HZoLTQ/exec";
+
+        async function trackShipment() {
+            let refInput = document.getElementById('searchRef');
+            let resultBox = document.getElementById('resultBox');
+            let errorBox = document.getElementById('errorBox');
+            
+            if (!refInput) return;
+
+            let ref = refInput.value.trim();
+            
+            resultBox.style.display = 'none';
+            errorBox.style.display = 'none';
+
+            if (!ref) {
+                errorBox.innerText = "يرجى إدخال رقم الشحنة أولاً!";
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            try {
+                let response = await fetch(`${SCRIPT_URL}?ref=${encodeURIComponent(ref)}`);
+                let result = await response.json();
+
+                if (result.status === 'success') {
+                    let data = result.data;
+
+                    document.getElementById('resRef').innerText = data.ref || '-';
+                    document.getElementById('resMethod').innerText = data.method || '-';
+                    document.getElementById('resDestination').innerText = data.destination || '-'; 
+                    document.getElementById('resWeight').innerText = `${data.kg || 0} KG / ${data.cbm || 0} CBM`;
+                    
+                    // معالجة تاريخ الاستلام القادم من العمود M بformating نظيف
+                    let finalReceiveDate = "قيد الانتظار / لم يُحدد";
+                    let receiveDateVal = data.receiveDate;
+                    
+                    if (receiveDateVal && receiveDateVal !== "" && receiveDateVal !== "-") {
+                        finalReceiveDate = receiveDateVal.toString().substring(0, 10);
+                    }
+                    document.getElementById('resReceiveDate').innerText = finalReceiveDate;
+
+                    document.getElementById('resDate').innerText = data.expDate || '-'; 
+
+                    resultBox.style.display = 'block';
+                } else {
+                    errorBox.innerText = result.message || "عذراً، لم يتم العثور على شحنة بهذا الرقم.";
+                    errorBox.style.display = 'block';
+                }
+            } catch (error) {
+                console.error("خطأ في الاتصال:", error);
+                errorBox.innerText = "حدث خطأ في الاتصال بالخادم. يرجى المحاولة لاحقاً.";
+                errorBox.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>
