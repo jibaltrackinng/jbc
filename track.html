@@ -332,15 +332,16 @@
                     document.getElementById('resRef').innerText = data.ref || '-';
                     document.getElementById('resMethod').innerText = data.method || '-';
                     document.getElementById('resDestination').innerText = data.destination || '-'; 
-                    document.getElementById('resWeight').innerText = `${data.kg || 0} كغ / ${data.cbm || 0} CBM`;
+                    document.getElementById('resWeight').innerText = `${data.kg || 0} KG / ${data.cbm || 0} CBM`;
                     
                     // تاريخ الاستلام من العمود M
-                    let receiveDateVal = data.receiveDate;
-                    if (receiveDateVal && receiveDateVal !== "" && receiveDateVal !== "-") {
-                        document.getElementById('resReceiveDate').innerText = receiveDateVal;
-                    } else {
-                        document.getElementById('resReceiveDate').innerText = "قيد الانتظار / لم يُحدد";
-                    }
+                   let receiveDateVal = data.receiveDate;
+
+if (receiveDateVal) {
+    document.getElementById('resReceiveDate').innerText = receiveDateVal;
+} else {
+    document.getElementById('resReceiveDate').innerText = "قيد الانتظار / لم يُحدد";
+}
 
                     document.getElementById('resDate').innerText = data.expDate || '-'; 
 
