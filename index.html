@@ -3,199 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جبال البصرة للشحن الدولي - JBC</title>
+    <title>جبال البصرة للشحن الدولي - Jibal Al-Basra</title>
     <!-- استدعاء Bootstrap 5 وأيقونات FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --jbc-navy: #1e3a8a;
+            --jbc-navy: #3b6bde;
             --jbc-orange: #f97316;
-            --jbc-light: #f8fafc;
-            --jbc-gray: #64748b;
+            --jbc-light: #f1f3f5;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Tahoma', sans-serif;
             background-color: var(--jbc-light);
-            color: #334155;
+            color: #0c5ed2;
         }
-        
-        /* شريط التنقل والهيدر */
+        /* شريط التنقل */
         .navbar {
             background-color: var(--jbc-navy);
-            border-bottom: 3px solid var(--jbc-orange);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-bottom: 4px solid var(--jbc-orange);
         }
         .navbar-brand {
-            font-weight: 800;
-            color: #ffffff !important;
-            letter-spacing: 0.5px;
+            font-weight: bold;
+            color: rgba(5, 6, 6, 0.829) !important;
+            font-size: 1.25rem;
         }
+        /* الهيدر الرئيسي */
         .hero-section {
-            background: linear-gradient(135deg, var(--jbc-navy), #0f172a);
+            background: linear-gradient(135deg, var(--jbc-navy), #1e3a8a);
             color: white;
-            padding: 80px 0;
+            padding: 90px 0;
             position: relative;
         }
-        .hero-section h1 { font-weight: 800; }
-        .hero-section .highlight { color: var(--jbc-orange); }
-
-        /* الأزرار */
+        .hero-section h1 {
+            color: #fff;
+            font-weight: 800;
+        }
+        .hero-section .highlight {
+            color: var(--jbc-orange);
+        }
+        /* الأزرار المخصصة */
         .btn-orange {
             background-color: var(--jbc-orange);
             color: white;
             font-weight: bold;
             border-radius: 8px;
-            padding: 10px 24px;
-            border: none;
-            transition: all 0.3s ease;
+            padding: 12px 30px;
+            transition: all 0.3s;
         }
         .btn-orange:hover {
             background-color: #ea580c;
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
         }
-
-        /* تنسيق صندوق التتبع */
-        .tracking-card {
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        .btn-outline-custom {
+            border: 2px solid white;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 10px 25px;
+            transition: all 0.3s;
         }
-        .info-box {
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 15px 20px;
-            border: 1px solid #e2e8f0;
-            border-right: 5px solid var(--jbc-navy);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-            transition: box-shadow 0.3s ease;
-        }
-        .info-box:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .info-box.orange-border { border-right-color: var(--jbc-orange); }
-        .info-label {
-            color: var(--jbc-gray);
-            font-weight: 600;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .info-value {
-            font-weight: 700;
+        .btn-outline-custom:hover {
+            background-color: white;
             color: var(--jbc-navy);
-            font-size: 1.05rem;
         }
-
-        /* شريط التتبع الزمني (التايم لاين الأيقوني) */
-        .timeline-container {
-            position: relative;
-            padding: 40px 0 20px 0;
-            margin-bottom: 30px;
-        }
-        .timeline-track {
-            position: absolute;
-            top: 60px;
-            left: 5%;
-            right: 5%;
-            height: 4px;
-            background-color: #e2e8f0;
-            z-index: 1;
-            border-radius: 4px;
-        }
-        .timeline-progress {
-            position: absolute;
-            top: 60px;
-            right: 5%; 
-            height: 4px;
-            background-color: var(--jbc-orange);
-            z-index: 2;
-            transition: width 0.8s ease-in-out;
-            border-radius: 4px;
-        }
-        .timeline-steps {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            z-index: 3;
-        }
-        .step {
-            text-align: center;
-            flex: 1;
-        }
-        .step-icon {
-            width: 45px;
-            height: 45px;
-            background-color: #ffffff;
-            border: 3px solid #e2e8f0;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px auto;
-            color: #94a3b8;
-            font-size: 18px;
-            transition: all 0.4s ease;
-        }
-        .step-label {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #94a3b8;
-        }
-        .step.active .step-icon {
-            border-color: var(--jbc-orange);
-            background-color: var(--jbc-orange);
-            color: white;
-            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15);
-        }
-        .step.active .step-label { color: var(--jbc-navy); }
-        .step.completed .step-icon {
-            border-color: var(--jbc-navy);
-            background-color: var(--jbc-navy);
-            color: white;
-        }
-        .step.completed .step-label { color: var(--jbc-navy); }
-
         /* كارد الخدمات */
         .service-card {
             background: white;
             border-radius: 12px;
             padding: 30px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            border-top: 4px solid var(--jbc-navy);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 5px solid var(--jbc-navy);
             height: 100%;
-            transition: transform 0.3s;
         }
         .service-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.15);
             border-top-color: var(--jbc-orange);
         }
         .service-icon {
-            font-size: 35px;
+            font-size: 40px;
             color: var(--jbc-orange);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
-
+        /* قسم التطلعات ومعلومات الشركة */
+        .about-section {
+            background: white;
+            padding: 70px 0;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
         /* قسم اتصل بنا */
         .contact-box {
-            background: linear-gradient(135deg, #0f172a, var(--jbc-navy));
+            background: linear-gradient(135deg, #1e293b, var(--jbc-navy));
             color: white;
             border-radius: 16px;
             padding: 40px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        
         footer {
-            background-color: #0f172a;
+            background-color: #0b192c;
             color: #94a3b8;
-            padding: 20px 0;
+            padding: 25px 0;
             text-align: center;
+        }
+
+        /* ===== قسم تتبع الشحنات (من ملف track) ===== */
+        .tracking-section {
+            background: var(--jbc-light);
+            padding: 70px 0;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .tracker-card {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-top: 5px solid var(--jbc-orange);
+        }
+        .form-control-lg {
+            border-radius: 10px 0 0 10px;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #e2e8f0;
+        }
+        .form-control-lg:focus {
+            border-color: var(--jbc-orange);
+            box-shadow: none;
+        }
+        .btn-track {
+            border-radius: 0 10px 10px 0;
+            padding: 0 30px;
+            font-weight: bold;
+            font-size: 16px;
+            background-color: var(--jbc-orange);
+            border: none;
+            color: white;
+            transition: background 0.3s;
+        }
+        .btn-track:hover {
+            background-color: #ea580c;
+            color: white;
+        }
+        .result-box {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .info-card {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* تنسيق مسار المراحل الإيقوني (Timeline) */
+        .timeline-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 15px;
+        }
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 10px;
+            left: 10px;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+        .timeline-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        .timeline-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px auto;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .timeline-step.active .timeline-icon {
+            background: var(--jbc-orange);
+            color: white;
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
+        }
+        .timeline-step.completed .timeline-icon {
+            background: var(--jbc-navy);
+            color: white;
+        }
+        .timeline-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #64748b;
+        }
+        .timeline-step.active .timeline-title, .timeline-step.completed .timeline-title {
+            color: var(--jbc-navy);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -205,241 +245,264 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
+                <!-- هنا تم إضافة الشعار بجانب الاسم -->
+                <img src="logo.png" alt="شعار جبال البصرة" style="height: 70px; width: auto;" class="ms-2 rounded">
                 جبال البصرة للشحن الدولي (JBC)
             </a>
             <div class="d-flex align-items-center">
-                <a href="#tracking-section" class="btn btn-orange btn-sm">
-                    <i class="fa-solid fa-truck-fast ms-1"></i> تتبع شحنتك
+                <a href="#track" class="btn btn-orange btn-sm px-3 py-2">
+                    <i class="fa-solid fa-truck-fast ms-1"></i> تتبع الشحنات
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- الواجهة الرئيسية -->
+    <!-- الواجهة الرئيسية (Hero) -->
     <header class="hero-section text-center">
         <div class="container">
-            <h1 class="display-5 mb-3">بوابتك الموثوقة للشحن من <span class="highlight">الصين والإمارات</span> إلى العراق</h1>
-            <p class="lead text-light opacity-75 mb-4">نقدم حلولاً لوجستية متكاملة، شحن بحري وجوي، وتخليص جمركي آمن وسريع.</p>
+            <h1 class="display-4 mb-3">بوابتك الموثوقة للشحن من <span class="highlight">الصين والإمارات</span> إلى العراق</h1>
+            <p class="lead text-light opacity-85 mb-4">نقدم حلولاً لوجستية متكاملة، شحن بحري وجوي، خدمات التخليص الجمركي، وفحص وتجهيز البضائع باحترافية عالية.</p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="#track" class="btn btn-orange btn-lg"><i class="fa-solid fa-search ms-2"></i> تتبع الشحنات</a>
+                <a href="#contact" class="btn btn-outline-custom btn-lg"><i class="fa-solid fa-phone ms-2"></i> اتصل بنا</a>
+            </div>
         </div>
     </header>
 
-    <!-- قسم التتبع -->
-    <section id="tracking-section" class="container py-5" style="margin-top: -60px; position: relative; z-index: 10;">
-        <div class="card tracking-card bg-white p-4 p-md-5">
-            <div class="text-center mb-4">
-                <h3 class="fw-bold" style="color: var(--jbc-navy);">تتبع حالة شحنتك فورياً</h3>
-                <p class="text-muted">أدخل رقم التتبع الخاص بك لمعرفة مرحلة الشحنة وتاريخ الاستلام الفعلي بدقة</p>
-            </div>
-            
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="input-group mb-3 shadow-sm rounded-3 overflow-hidden">
-                        <input type="text" id="searchRef" class="form-control form-control-lg border-0 bg-light" placeholder="أدخل رقم الشحنة (مثال: JBC-1001)...">
-                        <button class="btn btn-orange px-4" type="button" onclick="trackShipment()">
-                            <i class="fa-solid fa-magnifying-glass ms-1"></i> بحث
-                        </button>
-                    </div>
-                    <div id="errorBox" class="alert alert-danger mt-2 text-center" style="display: none;"></div>
+    <!-- خدماتنا وتطلعات الشركة -->
+    <section class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold" style="color: var(--jbc-navy);">خدماتنا اللوجستية المتميزة</h2>
+            <p class="text-muted">نلبي كافة احتياجات عملائنا التجاريين والشركات بأعلى معايير السرعة والأمان</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- الخدمة 1 -->
+            <div class="col-md-4">
+                <div class="service-card text-center">
+                    <div class="service-icon"><i class="fa-solid fa-ship"></i></div>
+                    <h4 class="fw-bold mb-3">الشحن البحري والبري</h4>
+                    <p class="text-muted">خطوط نقل منتظمة وآمنة من موانئ الصين ودولة الإمارات العربية المتحدة وصولاً إلى كافة مخازننا في العراق.</p>
                 </div>
             </div>
-
-            <!-- صندوق عرض النتائج -->
-            <div id="resultBox" class="mt-4" style="display: none;">
-                
-                <!-- شريط تتبع الحالة الأيقوني -->
-                <div class="timeline-container">
-                    <div class="timeline-track"></div>
-                    <div class="timeline-progress" id="timelineProgress" style="width: 0%;"></div>
-                    <div class="timeline-steps">
-                        <div class="step" id="step-1">
-                            <div class="step-icon"><i class="fa-solid fa-file-signature"></i></div>
-                            <div class="step-label">تم الإنشاء</div>
-                        </div>
-                        <div class="step" id="step-2">
-                            <div class="step-icon"><i class="fa-solid fa-warehouse"></i></div>
-                            <div class="step-label">بالمخزن</div>
-                        </div>
-                        <div class="step" id="step-3">
-                            <div class="step-icon"><i class="fa-solid fa-ship"></i></div>
-                            <div class="step-label">طور الشحن</div>
-                        </div>
-                        <div class="step" id="step-4">
-                            <div class="step-icon"><i class="fa-solid fa-location-dot"></i></div>
-                            <div class="step-label">وصل للوجهة</div>
-                        </div>
-                        <div class="step" id="step-5">
-                            <div class="step-icon"><i class="fa-solid fa-handshake"></i></div>
-                            <div class="step-label">تم التسليم</div>
-                        </div>
-                    </div>
+            <!-- الخدمة 2 -->
+            <div class="col-md-4">
+                <div class="service-card text-center">
+                    <div class="service-icon"><i class="fa-solid fa-plane-departure"></i></div>
+                    <h4 class="fw-bold mb-3">الشحن الجوي السريع</h4>
+                    <p class="text-muted">خيارات شحن جوي عاجلة للبضائع الحساسة والمستعجلة لضمان وصولها في أسرع وقت قياسي.</p>
                 </div>
+            </div>
+            <!-- الخدمة 3 -->
+            <div class="col-md-4">
+                <div class="service-card text-center">
+                    <div class="service-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                    <h4 class="fw-bold mb-3">فحص وشراء وتجهيز البضائع</h4>
+                    <p class="text-muted">نوفر خدمات فحص المنتجات، الوساطة التجارية، وتجهيز المواد بدقة عالية نيابة عنك في أسواق الصين والإمارات.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <hr class="my-4" style="border-color: #e2e8f0;">
-                
-                <h5 class="mb-4 text-center fw-bold" style="color: var(--jbc-navy);">تفاصيل الشحنة</h5>
-                
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="info-box">
-                            <span class="info-label"><i class="fa-solid fa-barcode text-primary"></i> رقم الشحنة:</span>
-                            <bdi id="resRef" class="info-value">-</bdi>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-box">
-                            <span class="info-label"><i class="fa-solid fa-box-open text-primary"></i> طريقة الشحن:</span>
-                            <bdi id="resMethod" class="info-value">-</bdi>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-box">
-                            <span class="info-label"><i class="fa-solid fa-map-location-dot text-primary"></i> الوجهة:</span>
-                            <bdi id="resDestination" class="info-value">-</bdi>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-box">
-                            <span class="info-label"><i class="fa-solid fa-weight-scale text-primary"></i> الوزن / الحجم:</span>
-                            <bdi id="resWeight" class="info-value">-</bdi>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <div class="info-box orange-border">
-                            <span class="info-label"><i class="fa-regular fa-calendar-check text-warning"></i> تاريخ الاستلام:</span>
-                            <!-- تم توحيد الـ ID هنا بشكل نهائي -->
-                            <bdi id="resReceiveDate" class="info-value text-success">-</bdi>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-box orange-border">
-                            <span class="info-label"><i class="fa-solid fa-calendar-days text-warning"></i> الوصول المتوقع:</span>
-                            <bdi id="resDate" class="info-value text-danger">-</bdi>
-                        </div>
+    <!-- قسم عن الشركة والتطلعات -->
+    <section class="about-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h2 class="fw-bold mb-3" style="color: var(--jbc-navy);">رؤيتنا وتطلعاتنا في JBC</h2>
+                    <p class="text-muted lh-lg">
+                        تطمح شركة **جبال البصرة للشحن الدولي** لأن تكون الشريك اللوجستي الأول والرائد في تقديم خدمات الشحن والتخليص الجمركي على مستوى العراق. نلتزم ببناء جسور ثقة متينة مع التجار والمستوردين عبر تسهيل حركة التجارة الدولية، وتقليل تكاليف النقل، وضمان سلامة البضائع من مصدرها وحتى تسليمها للمستودعات.
+                    </p>
+                    <ul class="list-unstyled text-secondary mt-3">
+                        <li class="mb-2"><i class="fa-solid fa-check-circle text-orange ms-2" style="color: var(--jbc-orange);"></i> إدارة احترافية ومخازن مؤمنة بالكامل.</li>
+                        <li class="mb-2"><i class="fa-solid fa-check-circle text-orange ms-2" style="color: var(--jbc-orange);"></i> سرعة في الإنجاز وتخليص جمركي مرن.</li>
+                        <li class="mb-2"><i class="fa-solid fa-check-circle text-orange ms-2" style="color: var(--jbc-orange);"></i> متابعة مستمرة وتتبع دقيق لمسار الشحنات.</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="p-4 bg-light rounded-4 border shadow-sm">
+                        <i class="fa-solid fa-globe fa-4x mb-3" style="color: var(--jbc-navy);"></i>
+                        <h4 class="fw-bold">شبكة ربط دولية واسعة</h4>
+                        <p class="text-muted">من قلب الأسواق العالمية في الصين والإمارات إلى الأراضي العراقية، نقدم خدمات متكاملة تحت سقف واحد.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- الخدمات -->
-    <section class="container py-4">
-        <div class="text-center mb-5">
-            <h3 class="fw-bold" style="color: var(--jbc-navy);">خدماتنا اللوجستية</h3>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="service-card text-center">
-                    <div class="service-icon"><i class="fa-solid fa-ship"></i></div>
-                    <h5 class="fw-bold mb-3">الشحن البحري والبري</h5>
-                    <p class="text-muted small">خطوط نقل منتظمة وآمنة من الصين والإمارات وصولاً إلى كافة مخازننا في العراق بتكاليف تنافسية.</p>
-                </div>
+    <!-- ===== قسم تتبع الشحنات (مدمج من ملف track) ===== -->
+    <section id="track" class="tracking-section">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold" style="color: var(--jbc-navy);"><i class="fa-solid fa-truck-fast ms-2"></i> تتبع الشحنات</h2>
+                <p class="text-muted">تعرف على حالة ومسار شحنتك بكل سهولة وشفافية</p>
             </div>
-            <div class="col-md-4">
-                <div class="service-card text-center">
-                    <div class="service-icon"><i class="fa-solid fa-plane-departure"></i></div>
-                    <h5 class="fw-bold mb-3">الشحن الجوي السريع</h5>
-                    <p class="text-muted small">خيارات شحن جوي عاجلة للبضائع الحساسة والمستعجلة لضمان وصولها في أسرع وقت قياسي.</p>
+
+            <div class="tracker-card">
+                <h4 class="text-center mb-3 fw-bold" style="color: var(--jbc-navy);">استعلام عن شحنة</h4>
+                <p class="text-muted text-center mb-4">أدخل <strong>رقم الشحنة</strong> في الحقل أدناه واضغط على زر البحث.</p>
+
+                <div class="input-group mb-3">
+                    <input type="text" id="searchRef" class="form-control form-control-lg" placeholder="أدخل رقم الشحنة (مثال: jbal613)">
+                    <button class="btn btn-track" onclick="trackShipment()">
+                        تتبع الشحنة
+                    </button>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="service-card text-center">
-                    <div class="service-icon"><i class="fa-solid fa-file-shield"></i></div>
-                    <h5 class="fw-bold mb-3">التخليص الجمركي والفحص</h5>
-                    <p class="text-muted small">نوفر خدمات التخليص الجمركي المرن، وفحص المنتجات وتجهيزها نيابة عنك في الأسواق العالمية.</p>
+
+                <!-- رسالة الخطأ -->
+                <div id="errorBox" class="alert alert-danger mt-3 text-center" style="display: none; border-radius: 10px;"></div>
+
+                <!-- تفاصيل الشحنة (النتيجة) -->
+                <div id="resultBox" class="result-box">
+
+                    <!-- خط سير الشحنة الإيقوني (Timeline) -->
+                    <div class="timeline-container">
+                        <span class="d-block text-muted small mb-3 fw-bold text-center">مراحل رحلة الشحنة:</span>
+                        <div class="timeline-steps">
+                            <!-- المرحلة 1 -->
+                            <div class="timeline-step" id="step-1">
+                                <div class="timeline-icon"><i class="fa-solid fa-file-circle-plus"></i></div>
+                                <div class="timeline-title">تم الإنشاء</div>
+                            </div>
+                            <!-- المرحلة 2 -->
+                            <div class="timeline-step" id="step-2">
+                                <div class="timeline-icon"><i class="fa-solid fa-warehouse"></i></div>
+                                <div class="timeline-title">تم الاستلام بالمخزن</div>
+                            </div>
+                            <!-- المرحلة 3 -->
+                            <div class="timeline-step" id="step-3">
+                                <div class="timeline-icon"><i class="fa-solid fa-ship"></i></div>
+                                <div class="timeline-title">في طور الشحن</div>
+                            </div>
+                            <!-- المرحلة 4 -->
+                            <div class="timeline-step" id="step-4">
+                                <div class="timeline-icon"><i class="fa-solid fa-location-dot"></i></div>
+                                <div class="timeline-title">وصلت للوجهة</div>
+                            </div>
+                            <!-- المرحلة 5 -->
+                            <div class="timeline-step" id="step-5">
+                                <div class="timeline-icon"><i class="fa-solid fa-circle-check"></i></div>
+                                <div class="timeline-title">تم التسليم</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="text-secondary fw-bold mb-3"><i class="fa-solid fa-circle-info ms-1"></i> تفاصيل الشحنة:</h6>
+
+                    <div class="info-card">
+                        <span class="text-muted">رقم الشحنة:</span>
+                        <span id="resRef" class="fw-bold text-dark"></span>
+                    </div>
+
+                    <div class="info-card">
+                        <span class="text-muted">طريقة الشحن:</span>
+                        <span id="resMethod" class="fw-bold text-dark"></span>
+                    </div>
+
+                    <div class="info-card">
+                        <span class="text-muted">الشحن من:</span>
+                        <span id="resDestination" class="fw-bold text-dark"></span>
+                    </div>
+
+                    <div class="info-card">
+                        <span class="text-muted">الوزن / الحجم:</span>
+                        <span id="resWeight" class="fw-bold text-dark"></span>
+                    </div>
+
+                    <!-- تاريخ استلام الشحنة الفعلي -->
+                    <div class="info-card" style="border-right: 4px solid var(--jbc-navy);">
+                        <span class="text-muted"><i class="fa-regular fa-calendar-check ms-1" style="color: var(--jbc-navy);"></i> تاريخ استلام الشحنة:</span>
+                        <span id="resReceiveDate" class="fw-bold text-dark">-</span>
+                    </div>
+
+                    <!-- تاريخ الوصول المتوقع -->
+                    <div class="info-card" style="border-right: 4px solid var(--jbc-orange);">
+                        <span class="text-muted"><i class="fa-regular fa-calendar-days text-orange ms-1" style="color: var(--jbc-orange);"></i> تاريخ الوصول المتوقع:</span>
+                        <span id="resDate" class="fw-bold text-dark"></span>
+                    </div>
+
                 </div>
             </div>
         </div>
     </section>
 
     <!-- قسم اتصل بنا -->
-    <section id="contact" class="container py-5 mb-4">
+    <section id="contact" class="container py-5">
         <div class="contact-box text-center">
-            <h3 class="fw-bold mb-3">تواصل معنا اليوم</h3>
+            <h2 class="fw-bold mb-3">تواصل معنا اليوم</h2>
             <p class="text-light opacity-75 mb-4">فريقنا مستعد للإجابة على استفساراتكم وتقديم أفضل عروض الأسعار للشحن والتخليص.</p>
-            <div class="fs-2 fw-bold mb-3" dir="ltr" style="color: var(--jbc-orange);">
+            <div class="fs-3 fw-bold mb-3" dir="ltr" style="color: var(--jbc-orange);">
                 <i class="fa-solid fa-phone-volume ms-2"></i> +964 788 500 1004
             </div>
-            <p class="text-light small mb-0"><i class="fa-solid fa-location-dot ms-1"></i> العراق - البصرة - الجزائر</p>
+            <p class="text-muted small mb-0">العراق - البصرة - الجزائر</p>
         </div>
     </section>
 
     <!-- الفوتر -->
     <footer>
         <div class="container">
-            <p class="mb-0 small">جميع الحقوق محفوظة &copy; 2026 شركة جبال البصرة للشحن الدولي (JBC)</p>
+            <p class="mb-0">جميع الحقوق محفوظة &copy; 2026 شركة جبال البصرة للشحن الدولي (JBC)</p>
         </div>
     </footer>
 
-    <!-- سكريبت المعالجة -->
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_UYDISlOQ8YY_IzW6X_GEzDvlkJd0aikk8xUQaNBYq-W2-NooP45pD0oUXJy2HZoLTQ/exec";
+        // رابط Web App الخاص بـ Google Apps Script
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzM7N7TtVpm6c3Maad-Tkek0hlpb9EE6DOKhZ1LIoA1NvvVRbevf0CQJfzKZ4ZjV93EQw/exec";
 
-        function formatCleanDate(dateString) {
-            if (!dateString || String(dateString).trim() === "" || dateString === "-" || dateString === "#N/A" || String(dateString).toLowerCase() === "undefined") {
-                return "لم يُحدد بعد";
-            }
-            try {
-                let d = new Date(dateString);
-                if (isNaN(d.getTime())) return dateString; 
-                
-                let year = d.getFullYear();
-                let month = String(d.getMonth() + 1).padStart(2, '0');
-                let day = String(d.getDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            } catch (error) {
-                return dateString;
-            }
-        }
+        // مصفوفة المراحل بالترتيب الزمني
+        const stagesList = [
+            "تم الإنشاء",
+            "تم الاستلام بالمخزن",
+            "في طور الشحن",
+            "وصلت الى الوجهة",
+            "تم التسليم إلى العميل"
+        ];
 
-        function updateTimeline(status) {
+        function updateTimeline(currentStatus) {
             for (let i = 1; i <= 5; i++) {
-                let step = document.getElementById(`step-${i}`);
-                step.classList.remove('active', 'completed');
+                let el = document.getElementById(`step-${i}`);
+                if (el) el.classList.remove('active', 'completed');
             }
 
-            let level = 1; 
-            let statusText = status ? String(status) : "";
-
-            if (statusText.includes("مخزن") || statusText.includes("استلام")) level = 2;
-            if (statusText.includes("شحن") || statusText.includes("طريق") || statusText.includes("بحر") || statusText.includes("جو")) level = 3;
-            if (statusText.includes("وصول") || statusText.includes("وجهة") || statusText.includes("عراق") || statusText.includes("بصرة")) level = 4;
-            if (statusText.includes("تسليم") || statusText.includes("عميل") || statusText.includes("مكتمل")) level = 5;
-
-            for (let i = 1; i <= level; i++) {
-                let step = document.getElementById(`step-${i}`);
-                if (i === level) {
-                    step.classList.add('active');
-                } else {
-                    step.classList.add('completed');
+            let currentIndex = -1;
+            for (let i = 0; i < stagesList.length; i++) {
+                if (currentStatus.includes(stagesList[i]) || stagesList[i].includes(currentStatus)) {
+                    currentIndex = i;
+                    break;
                 }
             }
 
-            let progressPercentage = ((level - 1) / 4) * 100;
-            document.getElementById('timelineProgress').style.width = `${progressPercentage}%`;
+            if (currentIndex === -1) currentIndex = 0;
+
+            for (let i = 0; i < stagesList.length; i++) {
+                let stepEl = document.getElementById(`step-${i + 1}`);
+                if (stepEl) {
+                    if (i < currentIndex) {
+                        stepEl.classList.add('completed');
+                    } else if (i === currentIndex) {
+                        stepEl.classList.add('active');
+                    }
+                }
+            }
         }
 
         async function trackShipment() {
             let refInput = document.getElementById('searchRef');
             let resultBox = document.getElementById('resultBox');
             let errorBox = document.getElementById('errorBox');
-            
+
             if (!refInput) return;
+
             let ref = refInput.value.trim();
-            
+
             resultBox.style.display = 'none';
             errorBox.style.display = 'none';
 
             if (!ref) {
-                errorBox.innerText = "يرجى إدخال رقم الشحنة للبحث.";
+                errorBox.innerText = "يرجى إدخال رقم الشحنة أولاً!";
                 errorBox.style.display = 'block';
                 return;
             }
-
-            let btn = document.querySelector('button[onclick="trackShipment()"]');
-            let originalBtnText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin ms-1"></i> جاري البحث...';
-            btn.disabled = true;
 
             try {
                 let response = await fetch(`${SCRIPT_URL}?ref=${encodeURIComponent(ref)}`);
@@ -447,22 +510,24 @@
 
                 if (result.status === 'success') {
                     let data = result.data;
-                    
-                    // طباعة البيانات في الكونسول لتتبع الخطأ إذا كان اسم العمود مختلفاً في جوجل شيت
-                    console.log("البيانات القادمة من السيرفر:", data);
+
+                    updateTimeline(data.status || "تم الإنشاء");
 
                     document.getElementById('resRef').innerText = data.ref || '-';
                     document.getElementById('resMethod').innerText = data.method || '-';
-                    document.getElementById('resDestination').innerText = data.destination || '-'; 
+                    document.getElementById('resDestination').innerText = data.destination || '-';
                     document.getElementById('resWeight').innerText = `${data.kg || 0} KG / ${data.cbm || 0} CBM`;
-                    
-                    // إضافة جميع الاحتمالات الممكنة لاسم عمود التاريخ
-                    let finalReceiveDate = data.receiveDate || data.receivedDate || data.ReceiveDate || data.receive_date || data['تاريخ الاستلام'] || "";
-                    document.getElementById('resReceiveDate').innerText = formatCleanDate(finalReceiveDate);
-                    
-                    document.getElementById('resDate').innerText = formatCleanDate(data.expDate); 
 
-                    updateTimeline(data.status || data.state || "");
+                    // معالجة تاريخ الاستلام بشكل آمن
+                    let finalReceiveDate = "قيد الانتظار / لم يُحدد";
+                    let receiveDateVal = data.receiveDate;
+
+                    if (receiveDateVal && receiveDateVal !== "" && receiveDateVal !== "-") {
+                        finalReceiveDate = receiveDateVal.toString().substring(0, 10);
+                    }
+                    document.getElementById('resReceiveDate').innerText = finalReceiveDate;
+
+                    document.getElementById('resDate').innerText = data.expDate || '-';
 
                     resultBox.style.display = 'block';
                 } else {
@@ -470,12 +535,9 @@
                     errorBox.style.display = 'block';
                 }
             } catch (error) {
-                console.error("Error:", error);
-                errorBox.innerText = "حدث خطأ في الاتصال بالسيرفر. يرجى التأكد من اتصالك بالإنترنت والمحاولة مجدداً.";
+                console.error("خطأ في الاتصال:", error);
+                errorBox.innerText = "حدث خطأ في الاتصال بالخادم. يرجى المحاولة لاحقاً.";
                 errorBox.style.display = 'block';
-            } finally {
-                btn.innerHTML = originalBtnText;
-                btn.disabled = false;
             }
         }
     </script>
