@@ -340,7 +340,6 @@
                     // معالجة تاريخ الاستلام (العمود M)
                     let receiveDateVal = data.receiveDate;
                     if (receiveDateVal && receiveDateVal !== "" && receiveDateVal !== "-") {
-                        let cleanDate = receiveDateVal.toString().substring(0, 10);
                         document.getElementById('resReceiveDate').innerText = cleanDate;
                     } else {
                         document.getElementById('resReceiveDate').innerText = "قيد الانتظار / لم يُحدد";
