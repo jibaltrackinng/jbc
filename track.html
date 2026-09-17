@@ -18,7 +18,6 @@
             font-family: 'Tahoma', sans-serif;
             color: #334155;
         }
-        /* شريط التنقل العلوي البسيط للرجوع للرئيسية */
         .top-nav {
             background-color: var(--jbc-navy);
             padding: 15px 0;
@@ -125,7 +124,7 @@
             <p class="text-muted text-center mb-4">أدخل **رقم الشحنة** في الحقل أدناه واضغط على زر البحث.</p>
             
             <div class="input-group mb-3">
-                <input type="text" id="searchRef" class="form-control form-control-lg" placeholder="أدخل رقم الشحنة (مثال: jbal600)">
+                <input type="text" id="searchRef" class="form-control form-control-lg" placeholder="أدخل رقم الشحنة (مثال: jbal613)">
                 <button class="btn btn-track" onclick="trackShipment()">
                     تتبع الشحنة
                 </button>
@@ -137,7 +136,7 @@
             <!-- تفاصيل الشحنة (النتيجة) -->
             <div id="resultBox" class="result-box">
                 
-                <!-- 1. حالة الشحنة (في أول خانة وبارزة جداً) -->
+                <!-- 1. حالة الشحنة -->
                 <div class="status-card">
                     <span class="d-block text-light opacity-75 small mb-1">حالة الشحنة الحالية:</span>
                     <span id="resStatus" class="fs-4 fw-bold" style="color: #38bdf8;">جاري التحميل...</span>
@@ -165,10 +164,10 @@
                     <span id="resWeight" class="fw-bold text-dark"></span>
                 </div>
 
-                <!-- تاريخ استلام الشحنة الفعلي (فوق تاريخ الوصول المتوقع مباشرة) -->
+                <!-- تاريخ استلام الشحنة الفعلي (من العمود M) -->
                 <div class="info-card" style="border-right: 4px solid var(--jbc-navy);">
                     <span class="text-muted"><i class="fa-regular fa-calendar-check ms-1" style="color: var(--jbc-navy);"></i> تاريخ استلام الشحنة:</span>
-                    <span id="resReceiveDate" class="fw-bold text-dark"></span>
+                    <span id="resReceiveDate" class="fw-bold text-dark">-</span>
                 </div>
 
                 <!-- تاريخ الوصول المتوقع -->
@@ -204,17 +203,29 @@
                 let response = await fetch(`${SCRIPT_URL}?ref=${ref}`);
                 let result = await response.json();
 
+                // طباعة البيانات في الكونسول للتأكد من وصول قيمة العمود M
+                console.log("البيانات المستلمة من السيرفر:", result);
+
                 if (result.status === 'success') {
                     let data = result.data;
                     
-                    // تعبئة البيانات
-                    document.getElementById('resStatus').innerText = data.status; 
-                    document.getElementById('resRef').innerText = data.ref;
-                    document.getElementById('resMethod').innerText = data.method;
-                    document.getElementById('resDestination').innerText = data.destination; 
-                    document.getElementById('resWeight').innerText = `${data.kg} كغ / ${data.cbm} CBM`;
-                    document.getElementById('resReceiveDate').innerText = data.receiveDate || '-'; // تعبئة تاريخ الاستلام
-                    document.getElementById('resDate').innerText = data.expDate; // تاريخ الوصول المتوقع
+                    // تعبئة البيانات الأساسية
+                    document.getElementById('resStatus').innerText = data.status || '-'; 
+                    document.getElementById('resRef').innerText = data.ref || '-';
+                    document.getElementById('resMethod').innerText = data.method || '-';
+                    document.getElementById('resDestination').innerText = data.destination || '-'; 
+                    document.getElementById('resWeight').innerText = `${data.kg || 0} كغ / ${data.cbm || 0} CBM`;
+                    
+                    // تعبئة تاريخ الاستلام القادم من العمود M مباشرة وبشكل صريح
+                    let receiveDateVal = data.receiveDate;
+                    if (receiveDateVal && receiveDateVal !== "" && receiveDateVal !== "-") {
+                        document.getElementById('resReceiveDatepreference' || 'resReceiveDate').innerText = receiveDateVal;
+                        document.getElementById('resReceiveDate').innerText = receiveDateVal;
+                    } else {
+                        document.getElementById('resReceiveDate').innerText = "قيد الانتظار / لم يُحدد";
+                    }
+
+                    document.getElementById('resDate').innerText = data.expDate || '-'; 
 
                     resultBox.style.display = 'block';
                 } else {
@@ -222,6 +233,7 @@
                     errorBox.style.display = 'block';
                 }
             } catch (error) {
+                console.error("خطأ في الاتصال:", error);
                 errorBox.innerText = "حدث خطأ في الاتصال بالخادم. يرجى المحاولة لاحقاً.";
                 errorBox.style.display = 'block';
             }
