@@ -336,8 +336,10 @@
                     document.getElementById('resMethod').innerText = data.method || '-';
                     document.getElementById('resDestination').innerText = data.destination || '-'; 
                     document.getElementById('resWeight').innerText = `${data.kg || 0} KG / ${data.cbm || 0} CBM`;
-                    
+                    // ==========================================
+                    // أضف السطر هنا لفحص البيانات في الـ Console:
                     console.log("البيانات الكاملة المستلمة من الشحنة:", data);
+                    // ==========================================
                     // معالجة تاريخ الاستلام (العمود M) بشكل آمن وخالٍ من الأخطاء
                     let finalReceiveDate = "قيد الانتظار / لم يُحدد";
                     let receiveDateVal = data.receiveDate;
