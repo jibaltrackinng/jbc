@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جبال البصرة للشحن الدولي - Jibal Al-Basra</title>
+    <title>جبال البصرة للشحن والتجارة العامة - Jibal Al-Basra</title>
     <!-- استدعاء Bootstrap 5 وأيقونات FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --jbc-navy: #3b6bde;
+            --jbc-navy: #83a4f2;
             --jbc-orange: #f97316;
             --jbc-light: #f1f3f5;
         }
@@ -94,6 +94,26 @@
             padding: 70px 0;
             border-top: 1px solid #e2e8f0;
             border-bottom: 1px solid #e2e8f0;
+        }
+        /* بطاقات مجالات عمل الشركة داخل بروفايل الشركة */
+        .profile-pillar {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            height: 100%;
+            border-right: 4px solid var(--jbc-navy);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+            transition: all 0.3s;
+        }
+        .profile-pillar:hover {
+            border-right-color: var(--jbc-orange);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.12);
+        }
+        .pillar-icon {
+            font-size: 30px;
+            color: var(--jbc-orange);
+            margin-bottom: 12px;
         }
         /* قسم اتصل بنا */
         .contact-box {
@@ -237,6 +257,112 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* ===== تحسينات العرض على الهواتف المحمولة ===== */
+        @media (max-width: 767.98px) {
+            /* شريط التنقل: يسمح بالتفاف العناصر بدل تداخلها */
+            .navbar .container {
+                flex-wrap: wrap;
+                justify-content: center;
+                row-gap: 10px;
+                padding: 10px 15px;
+            }
+            .navbar-brand {
+                font-size: 0.95rem;
+                text-align: center;
+                justify-content: center;
+                width: 100%;
+            }
+            .navbar-brand img {
+                height: 50px !important;
+            }
+            .navbar .d-flex.align-items-center {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* الهيدر الرئيسي: تصغير الحشوة والخطوط */
+            .hero-section {
+                padding: 50px 0;
+            }
+            .hero-section h1 {
+                font-size: 1.6rem;
+                line-height: 1.4;
+            }
+            .hero-section .lead {
+                font-size: 0.95rem;
+            }
+            .hero-section .btn-lg {
+                width: 100%;
+                max-width: 320px;
+                font-size: 0.95rem;
+            }
+
+            /* تقليل الحشوة العامة للأقسام */
+            .tracking-section,
+            .about-section {
+                padding: 40px 0;
+            }
+            section.container.py-5 {
+                padding-top: 2.5rem !important;
+                padding-bottom: 2.5rem !important;
+            }
+
+            /* بطاقة التتبع */
+            .tracker-card {
+                padding: 20px 15px;
+            }
+            /* حقل البحث وزر التتبع: يظهران متراصين بشكل مريح */
+            .tracker-card .input-group {
+                flex-direction: column;
+            }
+            .tracker-card .form-control-lg {
+                border-radius: 10px !important;
+                margin-bottom: 10px;
+            }
+            .tracker-card .btn-track {
+                border-radius: 10px !important;
+                width: 100%;
+                padding: 12px 15px;
+            }
+
+            /* مسار مراحل الشحنة: تصغير الأيقونات والنصوص لتناسب الشاشة */
+            .timeline-container {
+                padding: 15px 8px;
+                overflow-x: auto;
+            }
+            .timeline-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 14px;
+            }
+            .timeline-title {
+                font-size: 9.5px;
+            }
+            .timeline-steps::before {
+                top: 16px;
+            }
+
+            /* بطاقات تفاصيل الشحنة: عمودية وأوضح على الشاشات الصغيرة */
+            .info-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            /* بطاقات مجالات عمل الشركة */
+            .profile-pillar {
+                padding: 20px;
+            }
+
+            /* قسم اتصل بنا */
+            .contact-box {
+                padding: 25px 18px;
+            }
+            .contact-box .fs-3 {
+                font-size: 1.4rem !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -247,7 +373,7 @@
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <!-- هنا تم إضافة الشعار بجانب الاسم -->
                 <img src="logo.png" alt="شعار جبال البصرة" style="height: 70px; width: auto;" class="ms-2 rounded">
-                جبال البصرة للشحن الدولي (JBC)
+                جبال البصرة للشحن والتجارة العامة (JBC)
             </a>
             <div class="d-flex align-items-center">
                 <a href="#track" class="btn btn-orange btn-sm px-3 py-2">
@@ -269,73 +395,12 @@
         </div>
     </header>
 
-    <!-- خدماتنا وتطلعات الشركة -->
-    <section class="container py-5">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold" style="color: var(--jbc-navy);">خدماتنا اللوجستية المتميزة</h2>
-            <p class="text-muted">نلبي كافة احتياجات عملائنا التجاريين والشركات بأعلى معايير السرعة والأمان</p>
-        </div>
-
-        <div class="row g-4">
-            <!-- الخدمة 1 -->
-            <div class="col-md-4">
-                <div class="service-card text-center">
-                    <div class="service-icon"><i class="fa-solid fa-ship"></i></div>
-                    <h4 class="fw-bold mb-3">الشحن البحري والبري</h4>
-                    <p class="text-muted">خطوط نقل منتظمة وآمنة من موانئ الصين ودولة الإمارات العربية المتحدة وصولاً إلى كافة مخازننا في العراق.</p>
-                </div>
-            </div>
-            <!-- الخدمة 2 -->
-            <div class="col-md-4">
-                <div class="service-card text-center">
-                    <div class="service-icon"><i class="fa-solid fa-plane-departure"></i></div>
-                    <h4 class="fw-bold mb-3">الشحن الجوي السريع</h4>
-                    <p class="text-muted">خيارات شحن جوي عاجلة للبضائع الحساسة والمستعجلة لضمان وصولها في أسرع وقت قياسي.</p>
-                </div>
-            </div>
-            <!-- الخدمة 3 -->
-            <div class="col-md-4">
-                <div class="service-card text-center">
-                    <div class="service-icon"><i class="fa-solid fa-clipboard-check"></i></div>
-                    <h4 class="fw-bold mb-3">فحص وشراء وتجهيز البضائع</h4>
-                    <p class="text-muted">نوفر خدمات فحص المنتجات، الوساطة التجارية، وتجهيز المواد بدقة عالية نيابة عنك في أسواق الصين والإمارات.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- قسم عن الشركة والتطلعات -->
-    <section class="about-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 mb-4 mb-lg-0">
-                    <h2 class="fw-bold mb-3" style="color: var(--jbc-navy);">رؤيتنا وتطلعاتنا في JBC</h2>
-                    <p class="text-muted lh-lg">
-                        تطمح شركة **جبال البصرة للشحن الدولي** لأن تكون الشريك اللوجستي الأول والرائد في تقديم خدمات الشحن والتخليص الجمركي على مستوى العراق. نلتزم ببناء جسور ثقة متينة مع التجار والمستوردين عبر تسهيل حركة التجارة الدولية، وتقليل تكاليف النقل، وضمان سلامة البضائع من مصدرها وحتى تسليمها للمستودعات.
-                    </p>
-                    <ul class="list-unstyled text-secondary mt-3">
-                        <li class="mb-2"><i class="fa-solid fa-check-circle text-orange ms-2" style="color: var(--jbc-orange);"></i> إدارة احترافية ومخازن مؤمنة بالكامل.</li>
-                        <li class="mb-2"><i class="fa-solid fa-check-circle text-orange ms-2" style="color: var(--jbc-orange);"></i> سرعة في الإنجاز وتخليص جمركي مرن.</li>
-                        <li class="mb-2"><i class="fa-solid fa-check-circle text-orange ms-2" style="color: var(--jbc-orange);"></i> متابعة مستمرة وتتبع دقيق لمسار الشحنات.</li>
-                    </ul>
-                </div>
-                <div class="col-lg-6 text-center">
-                    <div class="p-4 bg-light rounded-4 border shadow-sm">
-                        <i class="fa-solid fa-globe fa-4x mb-3" style="color: var(--jbc-navy);"></i>
-                        <h4 class="fw-bold">شبكة ربط دولية واسعة</h4>
-                        <p class="text-muted">من قلب الأسواق العالمية في الصين والإمارات إلى الأراضي العراقية، نقدم خدمات متكاملة تحت سقف واحد.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== قسم تتبع الشحنات (مدمج من ملف track) ===== -->
+    <!-- ===== قسم تتبع الشحنات (منقول إلى بداية الموقع) ===== -->
     <section id="track" class="tracking-section">
         <div class="container">
             <div class="text-center mb-4">
                 <h2 class="fw-bold" style="color: var(--jbc-navy);"><i class="fa-solid fa-truck-fast ms-2"></i> تتبع الشحنات</h2>
-                <p class="text-muted">تعرف على حالة ومسار شحنتك بكل سهولة وشفافية</p>
+                <p class="text-muted">تعرف على حالة ومسار شحنتك بكل سهولة</p>
             </div>
 
             <div class="tracker-card">
@@ -426,6 +491,87 @@
         </div>
     </section>
 
+    <!-- ===== بروفايل الشركة (احترافي وعصري) ===== -->
+    <section class="about-section" id="profile">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold" style="color: var(--jbc-navy);"تعرف اكثر</h2>
+                <p class="text-muted"> على رؤيتنا ومجالات عملنا المتكاملة</p>
+            </div>
+
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h3 class="fw-bold mb-3" style="color: var(--jbc-navy);">رؤيتنا وتطلعاتنا في JBC</h3>
+                    <p class="text-muted lh-lg">
+                        تطمح شركة <strong>جبال البصرة للشحن الدولي</strong> لأن تكون الشريك اللوجستي الأول والرائد في تقديم خدمات الشحن والنقل والتخليص الجمركي على مستوى العراق. نلتزم ببناء جسور ثقة متينة مع التجار والمستوردين عبر تسهيل حركة التجارة الدولية بين الصين والإمارات وتركيا والعراق، وتقليل تكاليف النقل، وضمان سلامة البضائع من مصدرها وحتى تسليمها للوجهة النهائية داخل العراق.
+                    </p>
+                    <ul class="list-unstyled text-secondary mt-3">
+                        <li class="mb-2"><i class="fa-solid fa-check-circle ms-2" style="color: var(--jbc-orange);"></i> إدارة احترافية ومخازن مؤمنة بالكامل.</li>
+                        <li class="mb-2"><i class="fa-solid fa-check-circle ms-2" style="color: var(--jbc-orange);"></i> سرعة في الإنجاز وتخليص جمركي مرن عبر جميع المنافذ.</li>
+                        <li class="mb-2"><i class="fa-solid fa-check-circle ms-2" style="color: var(--jbc-orange);"></i> متابعة مستمرة وتتبع دقيق لمسار الشحنات لحظة بلحظة.</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="p-4 bg-light rounded-4 border shadow-sm">
+                        <i class="fa-solid fa-globe fa-4x mb-3" style="color: var(--jbc-navy);"></i>
+                        <h4 class="fw-bold">شبكة ربط دولية واسعة</h4>
+                        <p class="text-muted">من قلب الأسواق العالمية في الصين والإمارات وتركيا إلى الأراضي العراقية عبر جميع المنافذ البرية والبحرية والجوية، نقدم خدمات متكاملة تحت سقف واحد.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- مجالات عمل الشركة -->
+            <div class="text-center mb-4">
+                <h3 class="fw-bold" style="color: var(--jbc-navy);">خدماتنا اللوجستية المتميزة</h3>
+                <p class="text-muted">نلبي كافة احتياجات عملائنا التجاريين والشركات بأعلى معايير السرعة والأمان</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="profile-pillar">
+                        <div class="pillar-icon"><i class="fa-solid fa-ship"></i></div>
+                        <h5 class="fw-bold">الشحن البحري وشحن الحاويات</h5>
+                        <p class="text-muted mb-0">نقل البضائع والحاويات بحراً من الصين والإمارات وتركيا إلى العراق عبر جميع المنافذ الحدودية والبحرية.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="profile-pillar">
+                        <div class="pillar-icon"><i class="fa-solid fa-plane-departure"></i></div>
+                        <h5 class="fw-bold">الشحن الجوي السريع</h5>
+                        <p class="text-muted mb-0">حلول شحن جوي عاجلة للبضائع الحساسة والمستعجلة لضمان وصولها في أسرع وقت قياسي.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="profile-pillar">
+                        <div class="pillar-icon"><i class="fa-solid fa-industry"></i></div>
+                        <h5 class="fw-bold">التجهيز والشراء المباشر</h5>
+                        <p class="text-muted mb-0">تجهيز وشراء المواد من الصين والإمارات وتركيا، والتواصل المباشر مع المصانع لضمان الحصول على أفضل الأسعار.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="profile-pillar">
+                        <div class="pillar-icon"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                        <h5 class="fw-bold">الخدمات المالية</h5>
+                        <p class="text-muted mb-0">تسديد الفواتير والتحويلات المالية للموردين والمصانع نيابة عن عملائنا بكل أمان وسهولة.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="profile-pillar">
+                        <div class="pillar-icon"><i class="fa-solid fa-truck"></i></div>
+                        <h5 class="fw-bold">أسطول النقل الداخلي</h5>
+                        <p class="text-muted mb-0">نمتلك أسطولاً خاصاً لنقل البضائع داخلياً بين جميع النقاط والمحافظات في عموم العراق.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="profile-pillar">
+                        <div class="pillar-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                        <h5 class="fw-bold">الفحص وضمان الجودة</h5>
+                        <p class="text-muted mb-0">فحص المنتجات والوساطة التجارية لضمان مطابقة البضائع للمواصفات قبل شحنها.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- قسم اتصل بنا -->
     <section id="contact" class="container py-5">
         <div class="contact-box text-center">
@@ -435,13 +581,14 @@
                 <i class="fa-solid fa-phone-volume ms-2"></i> +964 788 500 1004
             </div>
             <p class="text-muted small mb-0">العراق - البصرة - الجزائر</p>
+             <p class="text-muted small mb-0">Yiwu City, Zhejiang Province, China</p></p>
         </div>
     </section>
 
     <!-- الفوتر -->
     <footer>
         <div class="container">
-            <p class="mb-0">جميع الحقوق محفوظة &copy; 2026 شركة جبال البصرة للشحن الدولي (JBC)</p>
+            <p class="mb-0">جميع الحقوق محفوظة &copy; 2017 جبال البصرة للشحن والتجارة العامة (JBC)</p>
         </div>
     </footer>
 
