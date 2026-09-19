@@ -252,6 +252,16 @@
         .timeline-step.active .timeline-title, .timeline-step.completed .timeline-title {
             color: var(--jbc-navy);
         }
+        /* تاريخ إجراء كل مرحلة، يظهر أسفل عنوان المرحلة */
+        .timeline-date {
+            font-size: 10px;
+            color: #b0b8c4;
+            margin-top: 2px;
+            min-height: 12px;
+        }
+        .timeline-step.active .timeline-date, .timeline-step.completed .timeline-date {
+            color: var(--jbc-orange);
+        }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -340,6 +350,9 @@
             .timeline-title {
                 font-size: 9.5px;
             }
+            .timeline-date {
+                font-size: 8px;
+            }
             .timeline-steps::before {
                 top: 16px;
             }
@@ -385,8 +398,8 @@
     <!-- الواجهة الرئيسية (Hero) -->
     <header class="hero-section text-center">
         <div class="container">
-            <h1 class="display-4 mb-3">بوابتك الموثوقة للشحن من <span class="highlight">الصين والإمارات</span> إلى العراق</h1>
-            <p class="lead text-light opacity-85 mb-4">نقدم حلولاً لوجستية متكاملة، شحن بحري وجوي، خدمات التخليص الجمركي، وفحص وتجهيز البضائع باحترافية عالية.</p>
+            <h1 class="display-4 mb-3">بوابتك الموثوقة للشحن  <span class="highlight">الى العراق</span> </h1>
+            <p class="lead text-light opacity-85 mb-4">نقدم حلولاً لوجستية متكاملة، شحن بحري وجوي، خدمات التخليص الجمركي، والتجهيز , والنقل الداخلي  باحترافية عالية.</p>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
                 <a href="#track" class="btn btn-orange btn-lg"><i class="fa-solid fa-search ms-2"></i> تتبع الشحنات</a>
                 <a href="#contact" class="btn btn-outline-custom btn-lg"><i class="fa-solid fa-phone ms-2"></i> اتصل بنا</a>
@@ -421,32 +434,37 @@
 
                     <!-- خط سير الشحنة الإيقوني (Timeline) -->
                     <div class="timeline-container">
-                        <span class="d-block text-muted small mb-3 fw-bold text-center">مراحل رحلة الشحنة:</span>
+                        <span class="d-block text-muted small mb-3 fw-bold text-center">مراحل الشحن:</span>
                         <div class="timeline-steps">
-                            <!-- المرحلة 1 -->
-                            <div class="timeline-step" id="step-1">
+                            <!-- المرحلة 1: تم الإنشاء (مخفية بناءً على الطلب — يبدأ العرض من مرحلة الاستلام بالمخزن) -->
+                            <div class="timeline-step" id="step-1" style="display:none;">
                                 <div class="timeline-icon"><i class="fa-solid fa-file-circle-plus"></i></div>
                                 <div class="timeline-title">تم الإنشاء</div>
+                                <div class="timeline-date" id="step-1-date"></div>
                             </div>
                             <!-- المرحلة 2 -->
                             <div class="timeline-step" id="step-2">
                                 <div class="timeline-icon"><i class="fa-solid fa-warehouse"></i></div>
                                 <div class="timeline-title">تم الاستلام بالمخزن</div>
+                                <div class="timeline-date" id="step-2-date"></div>
                             </div>
                             <!-- المرحلة 3 -->
                             <div class="timeline-step" id="step-3">
                                 <div class="timeline-icon"><i class="fa-solid fa-ship"></i></div>
-                                <div class="timeline-title">في طور الشحن</div>
+                                <div class="timeline-title"> طور الشحن</div>
+                                <div class="timeline-date" id="step-3-date"></div>
                             </div>
                             <!-- المرحلة 4 -->
                             <div class="timeline-step" id="step-4">
                                 <div class="timeline-icon"><i class="fa-solid fa-location-dot"></i></div>
                                 <div class="timeline-title">وصلت للوجهة</div>
+                                <div class="timeline-date" id="step-4-date"></div>
                             </div>
                             <!-- المرحلة 5 -->
                             <div class="timeline-step" id="step-5">
                                 <div class="timeline-icon"><i class="fa-solid fa-circle-check"></i></div>
                                 <div class="timeline-title">تم التسليم</div>
+                                <div class="timeline-date" id="step-5-date"></div>
                             </div>
                         </div>
                     </div>
@@ -470,7 +488,13 @@
 
                     <div class="info-card">
                         <span class="text-muted">الوزن / الحجم:</span>
-                        <span id="resWeight" class="fw-bold text-dark"></span>
+                        <span id="resWeight" class="fw-bold text-dark"dir="ltr"></span>
+                    </div>
+
+                    <!-- عدد المغلفات (CTN) -->
+                    <div class="info-card">
+                        <span class="text-muted">عدد المغلفات (CTN):</span>
+                        <span id="resCtn" class="fw-bold text-dark"></span>
                     </div>
 
                     <!-- تاريخ استلام الشحنة الفعلي -->
@@ -494,7 +518,7 @@
     <section class="about-section" id="profile">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="fw-bold" style="color: var(--jbc-navy);"تعرف اكثر</h2>
+                <h2 class="fw-bold" style="color: var(--jbc-navy);">تعرف اكثر</h2>
                 <p class="text-muted"> على رؤيتنا ومجالات عملنا المتكاملة</p>
             </div>
 
@@ -593,7 +617,7 @@
 
     <script>
         // رابط Web App الخاص بـ Google Apps Script
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzM7N7TtVpm6c3Maad-Tkek0hlpb9EE6DOKhZ1LIoA1NvvVRbevf0CQJfzKZ4ZjV93EQw/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwIbWopkyCRFobsBuCpbA72LOd3vAT4qb7gYd-nDKPxM8ysjSZ43G8PNca6RAEAvlG8Pg/exec";
 
         // مصفوفة المراحل بالترتيب الزمني
         const stagesList = [
@@ -604,17 +628,32 @@
             "تم التسليم إلى العميل"
         ];
 
-        function updateTimeline(currentStatus) {
+        function updateTimeline(currentStatus, dates) {
             for (let i = 1; i <= 5; i++) {
                 let el = document.getElementById(`step-${i}`);
                 if (el) el.classList.remove('active', 'completed');
             }
 
+            const dateFields = ['created', 'warehouse', 'shipping', 'arrived', 'delivered'];
+
+            // تحديد المرحلة الحالية اعتماداً على آخر عمود تاريخ تم تحديثه فعلياً في كوكل شيت
+            // (الأعمدة R-V)، لأنها المصدر الأدق والأحدث لحالة الشحنة الفعلية
             let currentIndex = -1;
-            for (let i = 0; i < stagesList.length; i++) {
-                if (currentStatus.includes(stagesList[i]) || stagesList[i].includes(currentStatus)) {
+            for (let i = dateFields.length - 1; i >= 0; i--) {
+                let val = dates ? dates[dateFields[i]] : '';
+                if (val && val.toString().trim() !== '' && val.toString().trim() !== '-') {
                     currentIndex = i;
                     break;
+                }
+            }
+
+            // احتياطي: إن لم تتوفر أي تواريخ إطلاقاً، نعتمد على نص الحالة كما كان سابقاً
+            if (currentIndex === -1) {
+                for (let i = 0; i < stagesList.length; i++) {
+                    if (currentStatus.includes(stagesList[i]) || stagesList[i].includes(currentStatus)) {
+                        currentIndex = i;
+                        break;
+                    }
                 }
             }
 
@@ -630,6 +669,24 @@
                     }
                 }
             }
+
+            // تعبئة تاريخ إجراء كل مرحلة أسفل أيقونتها (قادم من كوكل شيت)
+            for (let i = 0; i < dateFields.length; i++) {
+                let dateEl = document.getElementById(`step-${i + 1}-date`);
+                if (dateEl) {
+                    let rawDate = dates ? dates[dateFields[i]] : '';
+                    dateEl.innerText = formatStageDate(rawDate);
+                }
+            }
+        }
+
+        // تنسيق تاريخ المرحلة ليظهر اليوم/الشهر/السنة فقط، بغض النظر عن ترتيب النص أو وجود وقت/فاصلة معه
+        function formatStageDate(rawDate) {
+            if (!rawDate) return '';
+            let str = rawDate.toString().trim();
+            if (!str || str === '-') return '';
+            let match = str.match(/\d{1,4}[\/\-]\d{1,2}[\/\-]\d{1,4}/);
+            return match ? match[0] : str;
         }
 
         async function trackShipment() {
@@ -657,12 +714,13 @@
                 if (result.status === 'success') {
                     let data = result.data;
 
-                    updateTimeline(data.status || "تم الإنشاء");
+                    updateTimeline(data.status || "تم الإنشاء", data.dates);
 
                     document.getElementById('resRef').innerText = data.ref || '-';
                     document.getElementById('resMethod').innerText = data.method || '-';
                     document.getElementById('resDestination').innerText = data.destination || '-';
                     document.getElementById('resWeight').innerText = `${data.kg || 0} KG / ${data.cbm || 0} CBM`;
+                    document.getElementById('resCtn').innerText = data.ctn || 0;
 
                     // معالجة تاريخ الاستلام بشكل آمن
                     let finalReceiveDate = "قيد الانتظار / لم يُحدد";
@@ -673,7 +731,7 @@
                     }
                     document.getElementById('resReceiveDate').innerText = finalReceiveDate;
 
-                    document.getElementById('resDate').innerText = data.expDate || '-';
+                    document.getElementById('resDate').innerText = formatStageDate(data.expDate) || '-';
 
                     resultBox.style.display = 'block';
                 } else {
