@@ -51,7 +51,14 @@ function unwrap(obj, key) {
 }
 
 function buildDefinition({ modelId, functionUrl, toolSecret }) {
-  const systemPrompt = readFileSync(path.join(HERE, "workflow", "system-prompt.md"), "utf8").trim();
+  let systemPrompt = readFileSync(path.join(HERE, "workflow", "system-prompt.md"), "utf8").trim();
+  // ما تعلّمناه من المحادثات السابقة (learning/knowledge.md)
+  const knowledge = readFileSync(path.join(HERE, "learning", "knowledge.md"), "utf8")
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .trim();
+  if (knowledge) {
+    systemPrompt += "\n\n## ما تعلمناه من محادثات الشركة السابقة\nاستخدم هذه المعلومات وأسلوب الرد هذا، لكن التعليمات أعلاه لها الأولوية دائماً.\n\n" + knowledge;
+  }
   return {
     nodes: [
       {

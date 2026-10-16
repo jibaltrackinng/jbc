@@ -34,3 +34,15 @@
 5. فعّل سير العمل `JBC WhatsApp Agent`، ثم أرسل رسالة تجريبية إلى رقم الشركة.
 
 لتعديل تعليمات الوكيل لاحقاً: عدّل `system-prompt.md`، ثم شغّل `node whatsapp-agent/deploy.mjs build` مع نفس المتغيرات، وارفع الملف الناتج بـ `update-graph.js`.
+
+## التعلم من المحادثات السابقة
+
+1. اسحب المحادثات المخزنة في Kapso. يُخفي السكربت الأرقام والبريد الإلكتروني تلقائياً:
+   ```bash
+   node whatsapp-agent/learning/export-conversations.mjs --max 2000
+   ```
+   الناتج يُحفظ في `learning/conversations.txt`، ولا يُرفع إلى git لأنه يحتوي بيانات عملاء.
+2. استخلص من الناتج الأسئلة المتكررة وأسلوب الرد، واكتبها في `learning/knowledge.md`. يمكن لـ Claude أن يقوم بهذه الخطوة.
+3. أعد النشر. يُضيف `deploy.mjs` محتوى `knowledge.md` تلقائياً إلى تعليمات الوكيل.
+
+ملاحظة: المحادثات القديمة في تطبيق WhatsApp Business لا تصل إلى Kapso إلا إذا رُبط الرقم بوضع **Coexistence**، مع تفعيل استيراد سجل الرسائل (History Sync) أثناء الربط.
