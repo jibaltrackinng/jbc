@@ -1,0 +1,4 @@
+node_modules/
+# يُولَّد بواسطة deploy.mjs وقد يحتوي على TOOL_SECRET
+whatsapp-agent/workflow/definition.json
+package-lock.json
