@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ===== تطبيق الموبايل (PWA) ===== -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="جبال البصرة">
     <title>جبال البصرة للشحن والتجارة العامة - Jibal Al-Basra (JBC)</title>
     <!-- Tailwind CSS CDN -->
     <!-- ===== إعدادات الأمان ===== -->
@@ -808,6 +817,38 @@
 
         // عند فتح الصفحة: نحاول استعادة جلسة محفوظة (تذكرني)
         window.addEventListener('DOMContentLoaded', resumeSession);
+    </script>
+
+    <!-- ===== زر تثبيت التطبيق (PWA) ===== -->
+    <div id="pwaInstallBox" style="display:none" class="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:left-4 sm:max-w-sm z-50 bg-slate-900 text-white rounded-2xl shadow-2xl p-4 flex items-center gap-3 border border-slate-700">
+        <img src="icon-192.png" alt="" class="w-12 h-12 rounded-xl flex-shrink-0">
+        <div class="flex-1 text-sm">
+            <div class="font-bold">ثبّت تطبيق جبال البصرة</div>
+            <div id="pwaInstallHint" class="text-slate-300 text-xs mt-0.5">تتبّع شحناتك مباشرة من شاشة موبايلك</div>
+        </div>
+        <button id="pwaInstallBtn" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-xl text-sm font-bold">تثبيت</button>
+        <button id="pwaInstallClose" class="text-slate-400 hover:text-white text-lg px-1" aria-label="إغلاق">&times;</button>
+    </div>
+    <script>
+        (function () {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+            }
+            var box = document.getElementById('pwaInstallBox'), btn = document.getElementById('pwaInstallBtn'),
+                hint = document.getElementById('pwaInstallHint'), closeBtn = document.getElementById('pwaInstallClose');
+            var standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+            var dismissed = false; try { dismissed = localStorage.getItem('jbcPwaDismissed') === '1'; } catch (e) {}
+            if (standalone || dismissed) return;
+            var deferred = null;
+            window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; box.style.display = 'flex'; });
+            btn.addEventListener('click', function () {
+                if (deferred) { deferred.prompt(); deferred.userChoice.finally(function () { deferred = null; box.style.display = 'none'; }); }
+            });
+            closeBtn.addEventListener('click', function () { box.style.display = 'none'; try { localStorage.setItem('jbcPwaDismissed', '1'); } catch (e) {} });
+            // آيفون: لا يدعم زر التثبيت، نعرض طريقة الإضافة يدوياً
+            var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+            if (isIOS) { hint.textContent = 'اضغط زر المشاركة ⬆️ ثم "إضافة إلى الشاشة الرئيسية"'; btn.style.display = 'none'; box.style.display = 'flex'; }
+        })();
     </script>
 </body>
 </html>
