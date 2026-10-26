@@ -132,6 +132,24 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* أزرار الواجهة الرئيسية */
+        .hero-btn { display:flex; flex-direction:column; align-items:flex-start; gap:.15rem; padding:1rem; border-radius:1rem; font-weight:700; transition:all .2s; min-height:7.25rem; text-align:right; }
+        .hero-btn:active { transform:scale(.97); }
+        .hero-btn-icon { width:2.5rem; height:2.5rem; border-radius:.75rem; display:flex; align-items:center; justify-content:center; font-size:1.1rem; margin-bottom:.4rem; }
+        .hero-btn-title { font-size:.95rem; font-weight:800; line-height:1.3; }
+        .hero-btn-sub { font-size:.72rem; font-weight:600; }
+        @media (min-width:640px) { .hero-btn { padding:1.25rem; } .hero-btn-title { font-size:1.05rem; } .hero-btn-sub { font-size:.8rem; } }
+
+        /* قسم عنوان المستودع */
+        .wh-choice { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.25rem; padding:.9rem .4rem; border-radius:1rem; border:2px solid #e2e8f0; background:#fff; font-weight:800; text-align:center; transition:all .15s; }
+        .wh-choice:hover { border-color:#fb923c; }
+        .wh-choice.is-active { border-color:#f97316; background:#fff7ed; color:#c2410c; box-shadow:0 4px 14px -6px rgba(249,115,22,.45); }
+        .wh-row { display:flex; align-items:center; gap:.5rem; padding:.6rem .75rem; border-bottom:1px solid #f1f5f9; }
+        .wh-row:last-child { border-bottom:0; }
+        .wh-copy { flex-shrink:0; width:2.25rem; height:2.25rem; border-radius:.6rem; background:#f1f5f9; color:#475569; display:flex; align-items:center; justify-content:center; transition:all .15s; }
+        .wh-copy:hover { background:#ffedd5; color:#ea580c; }
+        .wh-copy.is-done { background:#d1fae5; color:#047857; }
 </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased selection:bg-orange-500 selection:text-white">
@@ -181,11 +199,12 @@
 
         <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 bg-slate-900">
             <div class="px-4 py-3 grid grid-cols-2 gap-2 text-sm font-semibold">
+                <button type="button" onclick="openAuth('login')" class="js-guest-only bg-orange-500 text-white rounded-xl px-3 py-3 flex items-center gap-2 font-bold"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</button>
+                <button type="button" onclick="openAuth('register')" class="js-guest-only bg-white/10 border border-white/20 rounded-xl px-3 py-3 flex items-center gap-2"><i class="fa-solid fa-user-plus text-orange-400"></i> سجّل معنا</button>
                 <a href="#track" onclick="toggleMobileMenu(false)" class="bg-white/5 rounded-xl px-3 py-3 flex items-center gap-2"><i class="fa-solid fa-truck-fast text-orange-500"></i> تتبع الشحنات</a>
-                <a href="#quote" onclick="toggleMobileMenu(false)" class="bg-white/5 rounded-xl px-3 py-3 flex items-center gap-2"><i class="fa-solid fa-calculator text-orange-500"></i> عرض أسعار</a>
-                <a href="#services" onclick="toggleMobileMenu(false)" class="bg-white/5 rounded-xl px-3 py-3 flex items-center gap-2"><i class="fa-solid fa-boxes-stacked text-orange-500"></i> خدماتنا</a>
+                <a href="#quote" onclick="toggleMobileMenu(false)" class="bg-white/5 rounded-xl px-3 py-3 flex items-center gap-2"><i class="fa-solid fa-calculator text-orange-500"></i> عرض كلفة شحن</a>
+                <a href="#services" onclick="toggleMobileMenu(false)" class="bg-white/5 rounded-xl px-3 py-3 flex items-center gap-2"><i class="fa-solid fa-boxes-stacked text-orange-500"></i> عن الخدمات</a>
                 <a href="#contact" onclick="toggleMobileMenu(false)" class="bg-white/5 rounded-xl px-3 py-3 flex items-center gap-2"><i class="fa-solid fa-headset text-orange-500"></i> اتصل بنا</a>
-                <button type="button" onclick="openAuth('register')" class="js-guest-only col-span-2 bg-white/10 border border-white/20 rounded-xl px-3 py-3 flex items-center justify-center gap-2"><i class="fa-solid fa-user-plus text-orange-400"></i> سجّل معنا واحصل على كود عميل</button>
                 <button type="button" onclick="toggleMobileMenu(false); jbcInstallApp()" class="js-app-install col-span-2 bg-orange-600 hover:bg-orange-700 text-white rounded-xl px-3 py-3 flex items-center justify-center gap-2 font-bold"><i class="fa-solid fa-mobile-screen-button"></i> حمّل تطبيق جبال البصرة</button>
             </div>
         </div>
@@ -208,15 +227,27 @@
             <p class="max-w-2xl mx-auto text-sm sm:text-lg text-slate-300 mb-8 sm:mb-10 leading-relaxed font-normal">
                 شحن بحري وجوي وبري إلى البصرة وكل محافظات العراق، شحن طلبات شي إن من دبي، تخليص جمركي، ومستودعات استلام في الصين ودبي، مع تتبع شحناتك أونلاين.
             </p>
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <button type="button" onclick="openAuth('login')" class="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 px-8 rounded-xl shadow-lg shadow-orange-500/30 transition-all flex items-center justify-center gap-2 text-base">
-                    <i class="fa-solid fa-truck-fast"></i> تتبع شحناتك
+            <!-- أزرار الإجراءات الرئيسية: شبكة 2×2 على الهاتف، صف واحد على الكمبيوتر -->
+            <div class="hero-actions grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto text-right">
+                <button type="button" onclick="openAuth('login')" class="hero-btn bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/30">
+                    <span class="hero-btn-icon bg-white/20"><i class="fa-solid fa-right-to-bracket"></i></span>
+                    <span class="hero-btn-title">تسجيل الدخول</span>
+                    <span class="hero-btn-sub text-orange-100">تتبّع شحناتك</span>
                 </button>
-                <a href="#quote" class="w-full sm:w-auto bg-white text-slate-900 hover:bg-slate-100 font-bold py-3.5 px-8 rounded-xl transition-all flex items-center justify-center gap-2 text-base">
-                    <i class="fa-solid fa-calculator text-orange-500"></i> اطلب عرض سعر
+                <button type="button" onclick="openAuth('register')" class="hero-btn bg-white text-slate-900 hover:bg-slate-100">
+                    <span class="hero-btn-icon bg-orange-100 text-orange-600"><i class="fa-solid fa-user-plus"></i></span>
+                    <span class="hero-btn-title">سجّل معنا</span>
+                    <span class="hero-btn-sub text-slate-500">عميل جديد</span>
+                </button>
+                <a href="#quote" class="hero-btn bg-white/10 hover:bg-white/20 border border-white/20 text-white">
+                    <span class="hero-btn-icon bg-white/15 text-orange-400"><i class="fa-solid fa-calculator"></i></span>
+                    <span class="hero-btn-title">طلب عرض كلفة شحن</span>
+                    <span class="hero-btn-sub text-slate-300">اعرف سعر شحنتك</span>
                 </a>
-                <a href="#services" class="w-full sm:w-auto bg-white/10 hover:bg-white/25 border border-white/20 text-white font-bold py-3.5 px-8 rounded-xl transition-all flex items-center justify-center gap-2 text-base">
-                    <i class="fa-solid fa-building"></i> خدماتنا
+                <a href="#services" class="hero-btn bg-white/10 hover:bg-white/20 border border-white/20 text-white">
+                    <span class="hero-btn-icon bg-white/15 text-orange-400"><i class="fa-solid fa-boxes-stacked"></i></span>
+                    <span class="hero-btn-title">عن الخدمات</span>
+                    <span class="hero-btn-sub text-slate-300">كل ما نقدّمه لك</span>
                 </a>
             </div>
         </div>
@@ -349,11 +380,13 @@
                         <div class="text-xs text-orange-300 font-bold mb-1">كود العميل</div>
                         <div id="regSuccessCode" dir="ltr" class="text-4xl font-black tracking-widest"></div>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <button type="button" onclick="copyRegisteredCode()" id="regCopyBtn" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-xl flex items-center justify-center gap-2"><i class="fa-regular fa-copy"></i> نسخ الكود</button>
-                        <button type="button" onclick="goToMyShipments()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2"><i class="fa-solid fa-box"></i> الدخول إلى حسابي</button>
+                    <!-- الإجراءات بعد التسجيل: كل إجراء في مربع مستقل -->
+                    <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                        <button type="button" onclick="toggleRegWarehouse()" id="regWhBtn" class="col-span-3 bg-orange-500 hover:bg-orange-600 text-white font-extrabold py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25"><i class="fa-solid fa-warehouse"></i> اطلب عنوان المستودع</button>
+                        <button type="button" onclick="copyRegisteredCode()" id="regCopyBtn" class="col-span-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-xl flex flex-col items-center justify-center gap-1 text-xs sm:text-sm"><i class="fa-regular fa-copy text-lg"></i> نسخ الكود</button>
+                        <button type="button" onclick="goToMyShipments()" class="col-span-2 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl flex flex-col items-center justify-center gap-1 text-xs sm:text-sm"><i class="fa-solid fa-box text-lg text-orange-400"></i> الدخول إلى حسابي وتتبع شحناتي</button>
                     </div>
-                    <a id="regDubaiLink" target="_blank" rel="noopener" class="mt-3 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2"><i class="fa-brands fa-whatsapp text-lg"></i> اطلب عنوان مستودعاتنا (دبي / الصين) عبر واتساب</a>
+                    <div id="regWarehouseBox" class="hidden mt-4 text-right"></div>
                 </div>
             </div>
 
@@ -365,6 +398,19 @@
                         <h3 class="text-xl sm:text-2xl font-black mt-0.5" id="welcomeClientName">-</h3>
                         <p class="text-slate-300 text-xs mt-1">هنا تجد جميع الشحنات الخاصة بك وتتبع حالتها لحظة بلحظة.</p>
                     </div>
+                </div>
+
+                <!-- عنوان المستودع وكود الشحن (مخفي حتى يضغط العميل الزر) -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <button type="button" id="dashWhToggle" onclick="toggleDashWarehouse()" aria-expanded="false" class="w-full flex items-center gap-3 p-4 text-right hover:bg-orange-50/50 transition-colors">
+                        <span class="w-11 h-11 shrink-0 rounded-xl bg-orange-500 text-white flex items-center justify-center text-lg"><i class="fa-solid fa-warehouse"></i></span>
+                        <span class="flex-1 min-w-0">
+                            <span class="block font-extrabold text-slate-900">أريد عنوان المستودع</span>
+                            <span class="block text-xs text-slate-500">احصل على عنوان المستودع وكود الشحن الخاص بك</span>
+                        </span>
+                        <span id="dashWhToggleLabel" class="shrink-0 text-xs font-bold bg-orange-100 text-orange-700 px-3 py-1.5 rounded-lg">إظهار <i class="fa-solid fa-chevron-down mr-1"></i></span>
+                    </button>
+                    <div id="dashWarehouseBox" class="hidden border-t border-slate-100 p-4 sm:p-6"></div>
                 </div>
 
                 <div>
@@ -917,6 +963,8 @@
             document.getElementById('loginClientCode').value = '';
             document.getElementById('loginClientPin').value = '';
             document.getElementById('rememberMe').checked = false;
+            currentClient = null;
+            toggleDashWarehouse(false);
             setLoggedInUI(false);
         }
 
@@ -927,6 +975,8 @@
             document.getElementById('clientDashboard').style.display = 'block';
             setLoggedInUI(true);
             document.getElementById('welcomeClientName').textContent = client.name || client.code;
+            currentClient = { code: client.code, name: client.name || client.code };
+            toggleDashWarehouse(false);
 
             const clientShipments = allShipments.filter(s =>
                 s.clientCode && s.clientCode.toString().trim() === client.code.toString().trim()
@@ -1086,7 +1136,9 @@
                 document.getElementById('regPin').value = '';
                 document.getElementById('regSuccessName').textContent = result.name || name;
                 document.getElementById('regSuccessCode').textContent = result.code;
-                document.getElementById('regDubaiLink').href = 'https://wa.me/' + SUPPORT_WHATSAPP + '?text=' + encodeURIComponent('مرحباً، أنا ' + (result.name || name) + ' (كود العميل: ' + result.code + '). سجّلت في موقعكم وأريد عناوين مستودعاتكم لشحن بضاعتي.');
+                currentClient = { code: result.code, name: result.name || name };
+                document.getElementById('regWarehouseBox').classList.add('hidden');
+                document.getElementById('regWarehouseBox').innerHTML = '';
                 document.getElementById('registerFormBox').classList.add('hidden');
                 document.getElementById('registerSuccessBox').classList.remove('hidden');
                 if (result.token) saveSession(result.code, result.token, result.expiresAt, false);
@@ -1132,6 +1184,233 @@
             if (notes) lines.push('ملاحظات: ' + notes);
             if (s && who && who !== '-') lines.push('', 'العميل: ' + who + ' (' + s.code + ')');
             openWhatsAppMsg(lines.join('\n'));
+        }
+
+        /* ================= عنوان المستودع وكود الشحن ================= */
+        let currentClient = null;
+        const SHIP_CODE_PREFIX = 'E22601SAS1074/';
+        const UAE_WAREHOUSES = {
+            air: {
+                label: 'شحن جوي', icon: 'fa-plane', suffix: 'BYAIR', img: 'shein-air.jpg',
+                fields: [
+                    ['Location', 'United Arab Emirates'],
+                    ['First Name', '__CODE__'],
+                    ['Family Name', 'Jibal Albasra'],
+                    ['Phone Number', '+971 502532361'],
+                    ['Emirates', 'Dubai / دبي'],
+                    ['City', 'Dubai / دبي'],
+                    ['District', 'Al Khabaisi / الخبيصي'],
+                    ['Street Name', 'Block A'],
+                    ['Building Number', 'Al kubaisi warehouse number 6 block A'],
+                    ['Detailed address', 'Block A number 6'],
+                    ['Postcode', '999041']
+                ]
+            },
+            land: {
+                label: 'شحن بري', icon: 'fa-truck', suffix: 'BYSEA', img: 'shein-land.jpg',
+                fields: [
+                    ['Location', 'United Arab Emirates'],
+                    ['First Name', '__CODE__'],
+                    ['Family Name', 'Jibal Albasra'],
+                    ['Phone Number', '+971 502532361'],
+                    ['Emirates', 'Dubai / دبي'],
+                    ['City', 'Al Aweer / العوير'],
+                    ['Street Name', 'AWEER CUSTOMS DRY PORT'],
+                    ['Building Number', 'SHED 4 PARKING 7'],
+                    ['Detailed address', 'AWEER CUSTOMS DRY PORT'],
+                    ['Postcode', '000000']
+                ]
+            }
+        };
+        const WH_COUNTRIES = {
+            uae:    { label: 'الإمارات', flag: '🇦🇪', hint: 'شي إن · جوي وبري', methods: ['air', 'land'] },
+            china:  { label: 'الصين',    flag: '🇨🇳', hint: 'جوي وبحري',       methods: ['air', 'sea'] },
+            turkey: { label: 'تركيا',    flag: '🇹🇷', hint: 'بري فقط',          methods: ['land'] }
+        };
+        const METHOD_INFO = {
+            air:  { label: 'شحن جوي', icon: 'fa-plane' },
+            sea:  { label: 'شحن بحري', icon: 'fa-ship' },
+            land: { label: 'شحن بري', icon: 'fa-truck' }
+        };
+        const whState = {};
+
+        function escHtml(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+        function shipCodeFor(suffix) {
+            const code = currentClient ? String(currentClient.code).trim() : '';
+            return SHIP_CODE_PREFIX + code + suffix;
+        }
+
+        function copyText(text, btn) {
+            const done = () => {
+                if (!btn) return;
+                const old = btn.innerHTML;
+                btn.classList.add('is-done');
+                btn.innerHTML = btn.dataset.doneHtml || '<i class="fa-solid fa-check"></i>';
+                setTimeout(() => { btn.classList.remove('is-done'); btn.innerHTML = old; }, 1600);
+            };
+            const fallback = () => {
+                const ta = document.createElement('textarea');
+                ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+                try { document.execCommand('copy'); done(); } catch (e) {}
+                document.body.removeChild(ta);
+            };
+            if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback);
+            else fallback();
+        }
+
+        function renderWarehouse(boxId) {
+            const box = document.getElementById(boxId);
+            if (!box) return;
+            const st = whState[boxId] || (whState[boxId] = { country: null, method: null, showImg: false });
+            const c = st.country ? WH_COUNTRIES[st.country] : null;
+
+            let html = '';
+            // شريط الخطوات
+            html += '<div class="flex items-center gap-2 text-[11px] sm:text-xs font-bold mb-4">'
+                 + '<span class="flex items-center gap-1.5 ' + (c ? 'text-emerald-600' : 'text-orange-600') + '"><span class="w-6 h-6 rounded-full flex items-center justify-center text-white ' + (c ? 'bg-emerald-500' : 'bg-orange-500') + '">' + (c ? '<i class="fa-solid fa-check"></i>' : '1') + '</span>بلد الشحن</span>'
+                 + '<span class="flex-1 h-0.5 bg-slate-200 rounded"></span>'
+                 + '<span class="flex items-center gap-1.5 ' + (st.method ? 'text-emerald-600' : (c ? 'text-orange-600' : 'text-slate-400')) + '"><span class="w-6 h-6 rounded-full flex items-center justify-center ' + (st.method ? 'bg-emerald-500 text-white' : (c ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-500')) + '">2</span>نوع الشحن</span>'
+                 + '<span class="flex-1 h-0.5 bg-slate-200 rounded"></span>'
+                 + '<span class="flex items-center gap-1.5 ' + (st.method ? 'text-orange-600' : 'text-slate-400') + '"><span class="w-6 h-6 rounded-full flex items-center justify-center ' + (st.method ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-500') + '">3</span>العنوان</span>'
+                 + '</div>';
+
+            // الخطوة 1: بلد الشحن
+            html += '<div class="text-sm font-extrabold text-slate-800 mb-2"><i class="fa-solid fa-earth-asia text-orange-500 ml-1"></i> الشحن من</div>';
+            html += '<div class="grid grid-cols-3 gap-2 sm:gap-3 mb-4">';
+            Object.keys(WH_COUNTRIES).forEach(k => {
+                const x = WH_COUNTRIES[k];
+                html += '<button type="button" data-wh-country="' + k + '" class="wh-choice ' + (st.country === k ? 'is-active' : '') + '">'
+                     + '<span class="text-2xl leading-none">' + x.flag + '</span>'
+                     + '<span class="text-sm">' + x.label + '</span>'
+                     + '<span class="text-[10px] sm:text-[11px] font-semibold text-slate-500">' + x.hint + '</span></button>';
+            });
+            html += '</div>';
+
+            // الخطوة 2: نوع الشحن
+            if (c) {
+                html += '<div class="text-sm font-extrabold text-slate-800 mb-2"><i class="fa-solid fa-route text-orange-500 ml-1"></i> نوع الشحن</div>';
+                html += '<div class="grid gap-2 sm:gap-3 mb-4 ' + (c.methods.length > 1 ? 'grid-cols-2' : 'grid-cols-1') + '">';
+                c.methods.forEach(m => {
+                    const mi = METHOD_INFO[m];
+                    html += '<button type="button" data-wh-method="' + m + '" class="wh-choice !flex-row !py-3 gap-2 ' + (st.method === m ? 'is-active' : '') + '">'
+                         + '<i class="fa-solid ' + mi.icon + '"></i><span class="text-sm">' + mi.label + '</span></button>';
+                });
+                html += '</div>';
+            }
+
+            // الخطوة 3: النتيجة
+            if (c && st.method) {
+                if (st.country === 'uae') html += renderUaeAddress(st);
+                else html += renderWhatsAppStep(st);
+            } else if (!c) {
+                html += '<p class="text-xs text-slate-500 text-center">اختر البلد الذي ستشحن منه لتظهر لك الخطوة التالية.</p>';
+            }
+
+            box.innerHTML = html;
+            bindWarehouseEvents(box, boxId);
+        }
+
+        function renderUaeAddress(st) {
+            const w = UAE_WAREHOUSES[st.method];
+            const code = shipCodeFor(w.suffix);
+            const airCode = shipCodeFor('BYAIR');
+            const landCode = shipCodeFor('BYSEA');
+            let h = '';
+
+            // رسالة التنبيه + الكود الكامل
+            h += '<div class="rounded-2xl border-2 border-red-200 bg-red-50 p-4 mb-4">'
+               + '<div class="flex items-start gap-2 text-red-700 font-extrabold text-sm leading-relaxed"><span class="text-base leading-none mt-0.5">🟥</span><span>استبدل كود الشحن الموجود في خانة الاسم الأول (First Name) بالكود الخاص بك</span></div>'
+               + '<div class="mt-3 grid grid-cols-1 gap-2">'
+               + codeChip('شحن جوي', airCode, st.method === 'air')
+               + codeChip('شحن بري', landCode, st.method === 'land')
+               + '</div></div>';
+
+            // العنوان
+            h += '<div class="flex items-center justify-between mb-2">'
+               + '<div class="text-sm font-extrabold text-slate-800"><i class="fa-solid fa-location-dot text-orange-500 ml-1"></i> عنوان مستودع دبي (' + w.label + ')</div>'
+               + '<span class="text-[11px] text-slate-500">انسخ كل خانة كما هي</span></div>';
+            h += '<div class="rounded-2xl border border-slate-200 bg-white overflow-hidden mb-3" dir="ltr">';
+            w.fields.forEach(f => {
+                const isCode = f[1] === '__CODE__';
+                const val = isCode ? code : f[1];
+                h += '<div class="wh-row ' + (isCode ? 'bg-orange-50' : '') + '">'
+                   + '<div class="flex-1 min-w-0 text-left"><div class="text-[10px] font-bold uppercase tracking-wide ' + (isCode ? 'text-orange-600' : 'text-slate-400') + '">' + escHtml(f[0]) + (isCode ? ' ★' : '') + '</div>'
+                   + '<div class="text-sm font-bold break-words ' + (isCode ? 'text-orange-700' : 'text-slate-800') + '">' + escHtml(val) + '</div></div>'
+                   + '<button type="button" class="wh-copy" data-copy="' + escHtml(val) + '" aria-label="نسخ ' + escHtml(f[0]) + '"><i class="fa-regular fa-copy"></i></button></div>';
+            });
+            h += '</div>';
+
+            const all = w.fields.map(f => f[0] + ': ' + (f[1] === '__CODE__' ? code : f[1])).join('\n');
+            h += '<div class="grid grid-cols-2 gap-2">'
+               + '<button type="button" class="bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-sm" data-copy="' + escHtml(all) + '" data-done-html="<i class=&quot;fa-solid fa-check&quot;></i> تم النسخ"><i class="fa-regular fa-copy"></i> نسخ العنوان كامل</button>'
+               + '<button type="button" data-wh-img class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-sm"><i class="fa-regular fa-image"></i> ' + (st.showImg ? 'إخفاء الصورة' : 'مثال بالصورة') + '</button>'
+               + '</div>';
+            if (st.showImg) {
+                h += '<img src="' + w.img + '" alt="مثال عنوان SHEIN ' + w.label + '" loading="lazy" class="mt-3 w-full rounded-2xl border border-slate-200 shadow-sm">'
+                   + '<p class="text-[11px] text-red-600 font-bold text-center mt-2">⚠️ الصورة للتوضيح فقط — في خانة First Name اكتب كودك الخاص: <span dir="ltr">' + escHtml(code) + '</span></p>';
+            }
+            return h;
+        }
+
+        function codeChip(label, code, active) {
+            return '<div class="flex items-center gap-2 rounded-xl px-3 py-2 ' + (active ? 'bg-white border-2 border-orange-400' : 'bg-white/70 border border-red-100') + '">'
+                 + '<div class="flex-1 min-w-0"><div class="text-[11px] font-bold text-slate-500">' + label + '</div>'
+                 + '<div dir="ltr" class="text-left font-black text-slate-900 text-sm sm:text-base break-all tracking-wide">' + escHtml(code) + '</div></div>'
+                 + '<button type="button" class="wh-copy" data-copy="' + escHtml(code) + '" aria-label="نسخ كود ' + label + '"><i class="fa-regular fa-copy"></i></button></div>';
+        }
+
+        function renderWhatsAppStep(st) {
+            const c = WH_COUNTRIES[st.country];
+            const m = METHOD_INFO[st.method];
+            return '<div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-center">'
+                 + '<div class="w-12 h-12 mx-auto rounded-full bg-emerald-500 text-white flex items-center justify-center text-2xl mb-2"><i class="fa-brands fa-whatsapp"></i></div>'
+                 + '<div class="font-extrabold text-slate-900">الشحن من ' + c.label + ' — ' + m.label + '</div>'
+                 + '<p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">أرسل معلومات شحنتك عبر واتساب، وسيرسل لك فريقنا عنوان المستودع وكود الشحن الخاص بك.</p>'
+                 + '<button type="button" data-wh-wa class="mt-3 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2"><i class="fa-brands fa-whatsapp text-lg"></i> أرسل معلومات الشحنة عبر واتساب</button>'
+                 + '</div>';
+        }
+
+        function bindWarehouseEvents(box, boxId) {
+            const st = whState[boxId];
+            box.querySelectorAll('[data-wh-country]').forEach(b => b.addEventListener('click', () => {
+                st.country = b.dataset.whCountry;
+                const ms = WH_COUNTRIES[st.country].methods;
+                st.method = ms.length === 1 ? ms[0] : null;
+                st.showImg = false;
+                renderWarehouse(boxId);
+            }));
+            box.querySelectorAll('[data-wh-method]').forEach(b => b.addEventListener('click', () => {
+                st.method = b.dataset.whMethod; st.showImg = false; renderWarehouse(boxId);
+            }));
+            box.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => copyText(b.dataset.copy, b)));
+            const imgBtn = box.querySelector('[data-wh-img]');
+            if (imgBtn) imgBtn.addEventListener('click', () => { st.showImg = !st.showImg; renderWarehouse(boxId); });
+            const wa = box.querySelector('[data-wh-wa]');
+            if (wa) wa.addEventListener('click', () => {
+                const c = WH_COUNTRIES[st.country], m = METHOD_INFO[st.method];
+                const who = currentClient ? (currentClient.name + ' (كود العميل: ' + currentClient.code + ')') : '';
+                openWhatsAppMsg(['مرحباً، أريد عنوان المستودع وكود الشحن 📦', '', 'الاسم: ' + who, 'الشحن من: ' + c.label, 'نوع الشحن: ' + m.label, '', 'معلومات الشحنة:', 'نوع البضاعة: ', 'العدد / الوزن التقريبي: '].join('\n'));
+            });
+        }
+
+        function toggleRegWarehouse() {
+            const box = document.getElementById('regWarehouseBox');
+            const open = box.classList.contains('hidden');
+            box.classList.toggle('hidden', !open);
+            if (open) { renderWarehouse('regWarehouseBox'); box.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        }
+
+        function toggleDashWarehouse(force) {
+            const box = document.getElementById('dashWarehouseBox');
+            const open = force === undefined ? box.classList.contains('hidden') : force;
+            box.classList.toggle('hidden', !open);
+            document.getElementById('dashWhToggle').setAttribute('aria-expanded', open ? 'true' : 'false');
+            document.getElementById('dashWhToggleLabel').innerHTML = open ? 'إخفاء <i class="fa-solid fa-chevron-up mr-1"></i>' : 'إظهار <i class="fa-solid fa-chevron-down mr-1"></i>';
+            if (open) renderWarehouse('dashWarehouseBox');
+            else delete whState['dashWarehouseBox'];
         }
 
         window.addEventListener('DOMContentLoaded', resumeSession);
