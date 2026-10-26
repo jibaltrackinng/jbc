@@ -1200,6 +1200,7 @@
         const UAE_WAREHOUSES = {
             air: {
                 label: 'شحن جوي', icon: 'fa-plane', suffix: 'AIR', img: 'shein-air.jpg',
+                sentence: 'Jibal Albasra, United Arab Emirates, Dubai, Al Khabaisi, Al kubaisi warehouse number 6 block A, Block A number 6, Phone: +971 502532361, Postcode: 999041',
                 fields: [
                     ['Location', 'United Arab Emirates'],
                     ['First Name', '__CODE__'],
@@ -1216,6 +1217,7 @@
             },
             land: {
                 label: 'شحن بري', icon: 'fa-truck', suffix: 'SEA', img: 'shein-land.jpg',
+                sentence: 'Jibal Albasra, United Arab Emirates, Dubai, Al Aweer, AWEER CUSTOMS DRY PORT, SHED 4 PARKING 7, Phone: +971 502532361, Postcode: 000000',
                 fields: [
                     ['Location', 'United Arab Emirates'],
                     ['First Name', '__CODE__'],
@@ -1326,42 +1328,24 @@
         function renderUaeAddress(st) {
             const w = UAE_WAREHOUSES[st.method];
             const code = shipCodeFor(w.suffix);
-            const airCode = shipCodeFor('AIR');
-            const landCode = shipCodeFor('SEA');
             let h = '';
 
-            // رسالة التنبيه + الكود الكامل
-            h += '<div class="rounded-2xl border-2 border-red-200 bg-red-50 p-4 mb-4">'
+            // 1) التنبيه + كود طريقة الشحن المختارة فقط
+            h += '<div class="rounded-2xl border-2 border-red-200 bg-red-50 p-4 mb-3">'
                + '<div class="flex items-start gap-2 text-red-700 font-extrabold text-sm leading-relaxed"><span class="text-base leading-none mt-0.5">🟥</span><span>استبدل كود الشحن الموجود في خانة الاسم الأول (First Name) بالكود الخاص بك</span></div>'
-               + '<div class="mt-3 grid grid-cols-1 gap-2">'
-               + codeChip('شحن جوي', airCode, st.method === 'air')
-               + codeChip('شحن بري', landCode, st.method === 'land')
-               + '</div></div>';
+               + '<div class="mt-3">' + codeChip(w.label, code, true) + '</div></div>';
 
-            // العنوان
-            h += '<div class="flex items-center justify-between mb-2">'
-               + '<div class="text-sm font-extrabold text-slate-800"><i class="fa-solid fa-location-dot text-orange-500 ml-1"></i> عنوان مستودع دبي (' + w.label + ')</div>'
-               + '<span class="text-[11px] text-slate-500">انسخ كل خانة كما هي</span></div>';
-            h += '<div class="rounded-2xl border border-slate-200 bg-white overflow-hidden mb-3" dir="ltr">';
-            w.fields.forEach(f => {
-                const isCode = f[1] === '__CODE__';
-                const val = isCode ? code : f[1];
-                h += '<div class="wh-row ' + (isCode ? 'bg-orange-50' : '') + '">'
-                   + '<div class="flex-1 min-w-0 text-left"><div class="text-[10px] font-bold uppercase tracking-wide ' + (isCode ? 'text-orange-600' : 'text-slate-400') + '">' + escHtml(f[0]) + (isCode ? ' ★' : '') + '</div>'
-                   + '<div class="text-sm font-bold break-words ' + (isCode ? 'text-orange-700' : 'text-slate-800') + '">' + escHtml(val) + '</div></div>'
-                   + '<button type="button" class="wh-copy" data-copy="' + escHtml(val) + '" aria-label="نسخ ' + escHtml(f[0]) + '"><i class="fa-regular fa-copy"></i></button></div>';
-            });
-            h += '</div>';
+            // 2) صورة المثال التوضيحي مباشرة تحت التنبيه
+            h += '<img src="' + w.img + '" alt="مثال توضيحي لعنوان SHEIN ' + w.label + '" loading="lazy" class="w-full rounded-2xl border border-slate-200 shadow-sm">'
+               + '<p class="text-[11px] text-slate-500 text-center mt-1.5 mb-4">مثال توضيحي — اكتب كودك الخاص في خانة First Name</p>';
 
-            const all = w.fields.map(f => f[0] + ': ' + (f[1] === '__CODE__' ? code : f[1])).join('\n');
-            h += '<div class="grid grid-cols-2 gap-2">'
-               + '<button type="button" class="bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-sm" data-copy="' + escHtml(all) + '" data-done-html="<i class=&quot;fa-solid fa-check&quot;></i> تم النسخ"><i class="fa-regular fa-copy"></i> نسخ العنوان كامل</button>'
-               + '<button type="button" data-wh-img class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-sm"><i class="fa-regular fa-image"></i> ' + (st.showImg ? 'إخفاء الصورة' : 'مثال بالصورة') + '</button>'
-               + '</div>';
-            if (st.showImg) {
-                h += '<img src="' + w.img + '" alt="مثال عنوان SHEIN ' + w.label + '" loading="lazy" class="mt-3 w-full rounded-2xl border border-slate-200 shadow-sm">'
-                   + '<p class="text-[11px] text-red-600 font-bold text-center mt-2">⚠️ الصورة للتوضيح فقط — في خانة First Name اكتب كودك الخاص: <span dir="ltr">' + escHtml(code) + '</span></p>';
-            }
+            // 3) العنوان الكامل كجملة واحدة قابلة للنسخ
+            const fullAddress = code + ' - ' + w.sentence;
+            h += '<div class="text-sm font-extrabold text-slate-800 mb-2"><i class="fa-solid fa-location-dot text-orange-500 ml-1"></i> العنوان الكامل (' + w.label + ')</div>'
+               + '<div class="rounded-2xl border-2 border-slate-200 bg-white p-4" dir="ltr">'
+               + '<p class="text-left text-sm sm:text-base font-bold text-slate-800 leading-relaxed break-words select-all">' + escHtml(fullAddress) + '</p>'
+               + '</div>'
+               + '<button type="button" class="mt-2 w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 text-sm" data-copy="' + escHtml(fullAddress) + '" data-done-html="<i class=&quot;fa-solid fa-check&quot;></i> تم نسخ العنوان"><i class="fa-regular fa-copy"></i> نسخ العنوان كامل</button>';
             return h;
         }
 
