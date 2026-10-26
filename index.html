@@ -8,7 +8,7 @@
     <meta name="keywords" content="شحن من الصين الى العراق, شحن من دبي الى العراق, شحن من تركيا الى العراق, شحن بري من تركيا, شحن شي ان العراق, SHEIN العراق, شحن البصرة, شركة شحن في البصرة, تخليص جمركي البصرة, شحن جوي الى العراق, شحن بحري الى العراق, عنوان مستودع دبي, شحن مواد طبية, جبال البصرة, JBC">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <link rel="canonical" href="https://jibaltrackinng.github.io/jbc/">
-    <!-- ===== تطبيق الموبايل (PWA) ===== -->
+
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <link rel="icon" type="image/png" href="icon-192.png">
@@ -133,7 +133,6 @@
             background: #94a3b8;
         }
 
-        /* أزرار الواجهة الرئيسية */
         .hero-btn { display:flex; flex-direction:column; align-items:flex-start; gap:.15rem; padding:1rem; border-radius:1rem; font-weight:700; transition:all .2s; min-height:7.25rem; text-align:right; }
         .hero-btn:active { transform:scale(.97); }
         .hero-btn-icon { width:2.5rem; height:2.5rem; border-radius:.75rem; display:flex; align-items:center; justify-content:center; font-size:1.1rem; margin-bottom:.4rem; }
@@ -141,7 +140,6 @@
         .hero-btn-sub { font-size:.72rem; font-weight:600; }
         @media (min-width:640px) { .hero-btn { padding:1.25rem; } .hero-btn-title { font-size:1.05rem; } .hero-btn-sub { font-size:.8rem; } }
 
-        /* قسم عنوان المستودع */
         .wh-choice { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.25rem; padding:.9rem .4rem; border-radius:1rem; border:2px solid #e2e8f0; background:#fff; font-weight:800; text-align:center; transition:all .15s; }
         .wh-choice:hover { border-color:#fb923c; }
         .wh-choice.is-active { border-color:#f97316; background:#fff7ed; color:#c2410c; box-shadow:0 4px 14px -6px rgba(249,115,22,.45); }
@@ -150,6 +148,11 @@
         .wh-copy { flex-shrink:0; width:2.25rem; height:2.25rem; border-radius:.6rem; background:#f1f5f9; color:#475569; display:flex; align-items:center; justify-content:center; transition:all .15s; }
         .wh-copy:hover { background:#ffedd5; color:#ea580c; }
         .wh-copy.is-done { background:#d1fae5; color:#047857; }
+        @keyframes bellRing { 0%,100% { transform:rotate(0); } 15% { transform:rotate(14deg); } 30% { transform:rotate(-12deg); } 45% { transform:rotate(9deg); } 60% { transform:rotate(-6deg); } 75% { transform:rotate(3deg); } }
+        .bell-ring i { animation: bellRing .9s ease-in-out; transform-origin: 50% 0; }
+        @keyframes toastIn { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:none; } }
+        #jbcToast:not(.hidden) { animation: toastIn .25s ease-out; }
+        @media (prefers-reduced-motion: reduce) { .bell-ring i, #jbcToast:not(.hidden) { animation:none; } }
 </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased selection:bg-orange-500 selection:text-white">
@@ -186,8 +189,13 @@
                         <i class="fa-solid fa-right-to-bracket"></i> دخول
                     </button>
 
-                    <button id="navLogoutBtn" onclick="clientLogout()" style="display:none;" class="items-center gap-2 bg-white/10 hover:bg-red-600/80 border border-white/25 text-white px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all">
-                        <i class="fa-solid fa-right-from-bracket"></i> <span>تسجيل خروج</span>
+                    <button id="navBellBtn" type="button" onclick="toggleNotifPanel()" aria-label="الإشعارات" aria-expanded="false" style="display:none;" class="relative w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 items-center justify-center text-lg transition-colors">
+                        <i class="fa-solid fa-bell"></i>
+                        <span id="notifBadge" class="hidden absolute -top-1.5 -left-1.5 min-w-[20px] h-5 px-1 rounded-full bg-orange-500 text-white text-[11px] font-black items-center justify-center ring-2 ring-slate-900">0</span>
+                    </button>
+
+                    <button id="navLogoutBtn" onclick="clientLogout()" aria-label="تسجيل خروج" style="display:none;" class="items-center gap-2 bg-white/10 hover:bg-red-600/80 border border-white/25 text-white px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all">
+                        <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden sm:inline">تسجيل خروج</span>
                     </button>
 
                     <button id="mobileMenuBtn" type="button" onclick="toggleMobileMenu()" aria-label="القائمة" aria-expanded="false" class="lg:hidden w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-lg">
@@ -210,6 +218,28 @@
         </div>
     </nav>
 
+    <div id="notifBackdrop" class="hidden fixed inset-0 z-[55] bg-slate-900/20 sm:bg-transparent" onclick="toggleNotifPanel(false)"></div>
+    <div id="notifPanel" role="dialog" aria-label="الإشعارات" class="hidden fixed z-[60] top-[70px] sm:top-[86px] inset-x-2 sm:inset-x-auto sm:left-6 sm:w-[390px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-fade-in">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+            <h3 class="font-extrabold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-bell text-orange-500"></i> الإشعارات</h3>
+            <button type="button" onclick="toggleNotifPanel(false)" class="w-8 h-8 rounded-full hover:bg-slate-100 text-slate-500" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="notifEnableBox" class="hidden px-4 py-3 bg-slate-50 border-b border-slate-100 flex items-center gap-3">
+            <i class="fa-solid fa-mobile-screen-button text-slate-500"></i>
+            <p class="flex-1 text-xs text-slate-600">فعّل التنبيهات ليصلك إشعار على جهازك</p>
+            <button type="button" onclick="enableDeviceNotifs()" class="shrink-0 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-lg">تفعيل</button>
+        </div>
+        <ul id="notifList" class="max-h-[65vh] overflow-y-auto divide-y divide-slate-100"></ul>
+    </div>
+
+    <div id="jbcToast" role="status" aria-live="polite" class="hidden fixed z-[70] top-[78px] sm:top-[96px] inset-x-3 sm:inset-x-auto sm:left-6 sm:w-[360px] bg-slate-900 text-white rounded-2xl shadow-2xl p-4 cursor-pointer flex items-start gap-3">
+        <span class="w-9 h-9 shrink-0 rounded-xl bg-orange-500 flex items-center justify-center"><i class="fa-solid fa-bell"></i></span>
+        <div class="min-w-0">
+            <p id="jbcToastTitle" class="font-extrabold text-sm"></p>
+            <p id="jbcToastBody" class="text-xs text-slate-300 mt-0.5 leading-relaxed"></p>
+        </div>
+    </div>
+
     <header class="relative bg-gradient-to-br from-slate-900 via-blue-950 to-blue-900 text-white py-12 sm:py-24 overflow-hidden">
 
         <div class="absolute inset-0 opacity-10 pointer-events-none">
@@ -227,7 +257,7 @@
             <p class="max-w-2xl mx-auto text-sm sm:text-lg text-slate-300 mb-8 sm:mb-10 leading-relaxed font-normal">
                 شحن بحري وجوي وبري إلى البصرة وكل محافظات العراق، شحن طلبات شي إن من دبي، تخليص جمركي، ومستودعات استلام في الصين ودبي، مع تتبع شحناتك أونلاين.
             </p>
-            <!-- أزرار الإجراءات الرئيسية: شبكة 2×2 على الهاتف، صف واحد على الكمبيوتر -->
+
             <div class="hero-actions grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto text-right">
                 <button type="button" onclick="openAuth('login')" class="hero-btn bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/30">
                     <span class="hero-btn-icon bg-white/20"><i class="fa-solid fa-right-to-bracket"></i></span>
@@ -372,40 +402,30 @@
                     </div>
                 </div>
 
-                <div id="registerSuccessBox" class="hidden text-center max-w-md mx-auto">
-                    <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full mx-auto flex items-center justify-center text-3xl mb-3"><i class="fa-solid fa-circle-check"></i></div>
-                    <h3 class="text-xl font-bold text-slate-900">أهلاً بك <span id="regSuccessName"></span>، تم تسجيلك بنجاح</h3>
-                    <p class="text-slate-500 text-sm mt-1">هذا كود العميل الخاص بك. احفظه مع رمز الدخول الذي اخترته.</p>
-                    <div class="my-5 bg-slate-900 text-white rounded-2xl py-5 px-4">
-                        <div class="text-xs text-orange-300 font-bold mb-1">كود العميل</div>
-                        <div id="regSuccessCode" dir="ltr" class="text-4xl font-black tracking-widest"></div>
-                    </div>
-                    <!-- الإجراءات بعد التسجيل: كل إجراء في مربع مستقل -->
-                    <div class="grid grid-cols-3 gap-2 sm:gap-3">
-                        <button type="button" onclick="toggleRegWarehouse()" id="regWhBtn" class="col-span-3 bg-orange-500 hover:bg-orange-600 text-white font-extrabold py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25"><i class="fa-solid fa-warehouse"></i> اطلب عنوان المستودع</button>
-                        <button type="button" onclick="copyRegisteredCode()" id="regCopyBtn" class="col-span-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-xl flex flex-col items-center justify-center gap-1 text-xs sm:text-sm"><i class="fa-regular fa-copy text-lg"></i> نسخ الكود</button>
-                        <button type="button" onclick="goToMyShipments()" class="col-span-2 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl flex flex-col items-center justify-center gap-1 text-xs sm:text-sm"><i class="fa-solid fa-box text-lg text-orange-400"></i> الدخول إلى حسابي وتتبع شحناتي</button>
-                    </div>
-                    <div id="regWarehouseBox" class="hidden mt-4 text-right"></div>
-                </div>
             </div>
 
             <div id="clientDashboard" style="display:none;" class="space-y-6">
 
                 <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white p-6 rounded-2xl shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div>
-                        <div class="text-orange-400 text-xs font-bold uppercase tracking-wider">مرحباً بك مجدداً</div>
+                        <div id="welcomeLabel" class="text-orange-400 text-xs font-bold uppercase tracking-wider">مرحباً بك مجدداً</div>
                         <h3 class="text-xl sm:text-2xl font-black mt-0.5" id="welcomeClientName">-</h3>
                         <p class="text-slate-300 text-xs mt-1">هنا تجد جميع الشحنات الخاصة بك وتتبع حالتها لحظة بلحظة.</p>
                     </div>
+                    <div class="flex items-center gap-3 bg-white/10 border border-white/15 rounded-xl pr-4 pl-2 py-2 self-stretch sm:self-auto justify-between">
+                        <div>
+                            <div class="text-[11px] text-slate-300 font-semibold">كود العميل</div>
+                            <div id="welcomeClientCode" dir="ltr" class="font-black text-lg tracking-widest text-right">-</div>
+                        </div>
+                        <button type="button" onclick="copyText(currentClient ? currentClient.code : '', this)" class="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 text-orange-300" aria-label="نسخ كود العميل"><i class="fa-regular fa-copy"></i></button>
+                    </div>
                 </div>
 
-                <!-- عنوان المستودع وكود الشحن (مخفي حتى يضغط العميل الزر) -->
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                     <button type="button" id="dashWhToggle" onclick="toggleDashWarehouse()" aria-expanded="false" class="w-full flex items-center gap-3 p-4 text-right hover:bg-orange-50/50 transition-colors">
                         <span class="w-11 h-11 shrink-0 rounded-xl bg-orange-500 text-white flex items-center justify-center text-lg"><i class="fa-solid fa-warehouse"></i></span>
                         <span class="flex-1 min-w-0">
-                            <span class="block font-extrabold text-slate-900">أريد عنوان المستودع</span>
+                            <span class="block font-extrabold text-slate-900">اطلب عنوان المستودع للشحن</span>
                             <span class="block text-xs text-slate-500">احصل على عنوان المستودع وكود الشحن الخاص بك</span>
                         </span>
                         <span id="dashWhToggleLabel" class="shrink-0 text-xs font-bold bg-orange-100 text-orange-700 px-3 py-1.5 rounded-lg">إظهار <i class="fa-solid fa-chevron-down mr-1"></i></span>
@@ -882,6 +902,7 @@
 
         function setLoggedInUI(on) {
             document.getElementById('navLogoutBtn').style.display = on ? 'inline-flex' : 'none';
+            document.getElementById('navBellBtn').style.display = on ? 'inline-flex' : 'none';
             document.querySelectorAll('.js-guest-only').forEach(el => { el.style.display = on ? 'none' : ''; });
         }
 
@@ -926,6 +947,7 @@
                 saveSession(result.client.code, result.token, result.expiresAt, remember);
                 pinInput.value = '';
                 renderDashboard(result.client, result.shipments || []);
+                setNotifications(result.notifications);
 
             } catch (error) {
                 console.error("خطأ في الاتصال:", error);
@@ -946,6 +968,7 @@
                 const result = await callApi({ resume: s.code, token: s.token });
                 if (result.status === 'success' && result.client) {
                     renderDashboard(result.client, result.shipments || []);
+                    setNotifications(result.notifications);
                 } else {
                     clearSession();
                 }
@@ -970,6 +993,7 @@
             document.getElementById('loginClientCode').value = '';
             document.getElementById('loginClientPin').value = '';
             document.getElementById('rememberMe').checked = false;
+            stopNotifs();
             currentClient = null;
             toggleDashWarehouse(false);
             setLoggedInUI(false);
@@ -982,6 +1006,8 @@
             document.getElementById('clientDashboard').style.display = 'block';
             setLoggedInUI(true);
             document.getElementById('welcomeClientName').textContent = client.name || client.code;
+            document.getElementById('welcomeClientCode').textContent = client.code;
+            document.getElementById('welcomeLabel').textContent = 'مرحباً بك مجدداً';
             currentClient = { code: client.code, name: client.name || client.code };
             toggleDashWarehouse(false);
 
@@ -1140,37 +1166,19 @@
                     return;
                 }
                 lastRegistered = result;
-                document.getElementById('regPin').value = '';
-                document.getElementById('regSuccessName').textContent = result.name || name;
-                document.getElementById('regSuccessCode').textContent = result.code;
-                currentClient = { code: result.code, name: result.name || name };
-                document.getElementById('regWarehouseBox').classList.add('hidden');
-                document.getElementById('regWarehouseBox').innerHTML = '';
-                document.getElementById('registerFormBox').classList.add('hidden');
-                document.getElementById('registerSuccessBox').classList.remove('hidden');
-                if (result.token) saveSession(result.code, result.token, result.expiresAt, false);
+                saveSession(result.code, result.token, result.expiresAt, true);
+                ['regName', 'regPhone', 'regAddress', 'regPin'].forEach(id => document.getElementById(id).value = '');
+                renderDashboard(result.client || { code: result.code, name: result.name || name }, result.shipments || []);
+                document.getElementById('welcomeLabel').textContent = 'تم إنشاء حسابك بنجاح 🎉';
+                setNotifications(result.notifications || []);
+                document.getElementById('track').scrollIntoView({ behavior: 'smooth' });
+                showToast('أهلاً بك ' + (result.name || name) + ' 👋', 'كود العميل الخاص بك: ' + result.code + ' — احفظه مع رمز الدخول.', () => toggleNotifPanel(true));
             } catch (e) {
                 showRegError('حدث خطأ في الاتصال بالخادم. يرجى المحاولة لاحقاً.');
             } finally {
                 registerInFlight = false;
                 btn.disabled = false; btn.innerHTML = old;
             }
-        }
-        function copyRegisteredCode() {
-            const code = document.getElementById('regSuccessCode').textContent;
-            const btn = document.getElementById('regCopyBtn');
-            const done = () => { btn.innerHTML = '<i class="fa-solid fa-check"></i> تم النسخ'; };
-            if (navigator.clipboard) navigator.clipboard.writeText(code).then(done, () => {});
-        }
-        async function goToMyShipments() {
-            const s = loadSession();
-            document.getElementById('registerCard').style.display = 'none';
-            document.getElementById('registerFormBox').classList.remove('hidden');
-            document.getElementById('registerSuccessBox').classList.add('hidden');
-            ['regName', 'regPhone', 'regAddress'].forEach(id => document.getElementById(id).value = '');
-            if (s) { await resumeSession(); if (document.getElementById('clientDashboard').style.display === 'block') return; }
-            openAuth('login');
-            if (lastRegistered) document.getElementById('loginClientCode').value = lastRegistered.code;
         }
 
         function sendQuoteRequest() {
@@ -1194,7 +1202,6 @@
             openWhatsAppMsg(lines.join('\n'));
         }
 
-        /* ================= عنوان المستودع وكود الشحن ================= */
         let currentClient = null;
         const SHIP_CODE_PREFIX = 'E22601SAS1074/';
         const UAE_WAREHOUSES = {
@@ -1248,7 +1255,7 @@
             return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
         function shipCodeFor(suffix) {
-            // نأخذ الأرقام فقط من كود الزبون (مثال: J0210 ← 210)
+
             const digits = currentClient ? String(currentClient.code).replace(/\D/g, '').replace(/^0+(?=\d)/, '') : '';
             return SHIP_CODE_PREFIX + digits + suffix;
         }
@@ -1280,7 +1287,7 @@
             const c = st.country ? WH_COUNTRIES[st.country] : null;
 
             let html = '';
-            // شريط الخطوات
+
             html += '<div class="flex items-center gap-2 text-[11px] sm:text-xs font-bold mb-4">'
                  + '<span class="flex items-center gap-1.5 ' + (c ? 'text-emerald-600' : 'text-orange-600') + '"><span class="w-6 h-6 rounded-full flex items-center justify-center text-white ' + (c ? 'bg-emerald-500' : 'bg-orange-500') + '">' + (c ? '<i class="fa-solid fa-check"></i>' : '1') + '</span>بلد الشحن</span>'
                  + '<span class="flex-1 h-0.5 bg-slate-200 rounded"></span>'
@@ -1289,7 +1296,6 @@
                  + '<span class="flex items-center gap-1.5 ' + (st.method ? 'text-orange-600' : 'text-slate-400') + '"><span class="w-6 h-6 rounded-full flex items-center justify-center ' + (st.method ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-500') + '">3</span>العنوان</span>'
                  + '</div>';
 
-            // الخطوة 1: بلد الشحن
             html += '<div class="text-sm font-extrabold text-slate-800 mb-2"><i class="fa-solid fa-earth-asia text-orange-500 ml-1"></i> الشحن من</div>';
             html += '<div class="grid grid-cols-3 gap-2 sm:gap-3 mb-4">';
             Object.keys(WH_COUNTRIES).forEach(k => {
@@ -1301,7 +1307,6 @@
             });
             html += '</div>';
 
-            // الخطوة 2: نوع الشحن
             if (c) {
                 html += '<div class="text-sm font-extrabold text-slate-800 mb-2"><i class="fa-solid fa-route text-orange-500 ml-1"></i> نوع الشحن</div>';
                 html += '<div class="grid gap-2 sm:gap-3 mb-4 ' + (c.methods.length > 1 ? 'grid-cols-2' : 'grid-cols-1') + '">';
@@ -1313,7 +1318,6 @@
                 html += '</div>';
             }
 
-            // الخطوة 3: النتيجة
             if (c && st.method) {
                 if (st.country === 'uae') html += renderUaeAddress(st);
                 else html += renderWhatsAppStep(st);
@@ -1330,16 +1334,13 @@
             const code = shipCodeFor(w.suffix);
             let h = '';
 
-            // 1) التنبيه + كود طريقة الشحن المختارة فقط
             h += '<div class="rounded-2xl border-2 border-red-200 bg-red-50 p-4 mb-3">'
                + '<div class="flex items-start gap-2 text-red-700 font-extrabold text-sm leading-relaxed"><span class="text-base leading-none mt-0.5">🟥</span><span>استبدل كود الشحن الموجود في خانة الاسم الأول (First Name) بالكود الخاص بك</span></div>'
                + '<div class="mt-3">' + codeChip(w.label, code, true) + '</div></div>';
 
-            // 2) صورة المثال التوضيحي مباشرة تحت التنبيه
             h += '<img src="' + w.img + '" alt="مثال توضيحي لعنوان SHEIN ' + w.label + '" loading="lazy" class="w-full rounded-2xl border border-slate-200 shadow-sm">'
                + '<p class="text-[11px] text-slate-500 text-center mt-1.5 mb-4">مثال توضيحي — اكتب كودك الخاص في خانة First Name</p>';
 
-            // 3) العنوان الكامل كجملة واحدة قابلة للنسخ
             const fullAddress = code + ' - ' + w.sentence;
             h += '<div class="text-sm font-extrabold text-slate-800 mb-2"><i class="fa-solid fa-location-dot text-orange-500 ml-1"></i> العنوان الكامل (' + w.label + ')</div>'
                + '<div class="rounded-2xl border-2 border-slate-200 bg-white p-4" dir="ltr">'
@@ -1390,13 +1391,6 @@
             });
         }
 
-        function toggleRegWarehouse() {
-            const box = document.getElementById('regWarehouseBox');
-            const open = box.classList.contains('hidden');
-            box.classList.toggle('hidden', !open);
-            if (open) { renderWarehouse('regWarehouseBox'); box.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-        }
-
         function toggleDashWarehouse(force) {
             const box = document.getElementById('dashWarehouseBox');
             const open = force === undefined ? box.classList.contains('hidden') : force;
@@ -1407,9 +1401,159 @@
             else delete whState['dashWarehouseBox'];
         }
 
+        let notifItems = [];
+        let notifTimer = null;
+        let notifOpenUnread = new Set();
+        const NOTIF_POLL_MS = 180000;
+
+        function notifSeenKey() { return 'jbc_notif_seen_' + (currentClient ? String(currentClient.code).toLowerCase() : ''); }
+        function getSeenNotifs() {
+            try { return new Set(JSON.parse(localStorage.getItem(notifSeenKey()) || '[]')); } catch (e) { return new Set(); }
+        }
+        function saveSeenNotifs(set) {
+            try { localStorage.setItem(notifSeenKey(), JSON.stringify(Array.from(set).slice(-300))); } catch (e) {}
+        }
+        function notifUnread() {
+            const seen = getSeenNotifs();
+            return notifItems.filter(n => !seen.has(n.id));
+        }
+        function notifTimeAgo(iso) {
+            const d = new Date(iso);
+            if (isNaN(d.getTime())) return '';
+            const s = Math.max(0, (Date.now() - d.getTime()) / 1000);
+            if (s < 60) return 'الآن';
+            if (s < 3600) return 'منذ ' + Math.floor(s / 60) + ' دقيقة';
+            if (s < 86400) return 'منذ ' + Math.floor(s / 3600) + ' ساعة';
+            if (s < 7 * 86400) return 'منذ ' + Math.floor(s / 86400) + ' يوم';
+            return formatDateDMY(iso.slice(0, 10));
+        }
+        const NOTIF_ICONS = {
+            welcome: { icon: 'fa-hand-sparkles', cls: 'bg-orange-100 text-orange-600' },
+            shipment: { icon: 'fa-box', cls: 'bg-blue-100 text-blue-700' },
+            admin: { icon: 'fa-bullhorn', cls: 'bg-emerald-100 text-emerald-700' }
+        };
+
+        function renderNotifBadge() {
+            const badge = document.getElementById('notifBadge');
+            const n = notifUnread().length;
+            badge.textContent = n > 9 ? '9+' : String(n);
+            badge.classList.toggle('hidden', n === 0);
+            badge.classList.toggle('flex', n > 0);
+        }
+
+        function renderNotifList() {
+            const list = document.getElementById('notifList');
+            if (!notifItems.length) {
+                list.innerHTML = '<li class="p-8 text-center text-sm text-slate-400"><i class="fa-regular fa-bell-slash text-2xl block mb-2"></i>لا توجد إشعارات بعد</li>';
+                return;
+            }
+            list.innerHTML = notifItems.map(n => {
+                const ic = NOTIF_ICONS[n.kind] || NOTIF_ICONS.admin;
+                const unread = notifOpenUnread.has(n.id);
+                return '<li class="flex gap-3 p-4 ' + (unread ? 'bg-orange-50/60' : 'bg-white') + '">'
+                    + '<span class="w-10 h-10 shrink-0 rounded-xl flex items-center justify-center ' + ic.cls + '"><i class="fa-solid ' + ic.icon + '"></i></span>'
+                    + '<div class="flex-1 min-w-0">'
+                    + '<div class="flex items-start justify-between gap-2"><p class="font-extrabold text-slate-900 text-sm leading-snug">' + escHtml(n.title) + '</p>'
+                    + (unread ? '<span class="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0 mt-1"></span>' : '') + '</div>'
+                    + (n.body ? '<p class="text-[13px] text-slate-600 leading-relaxed mt-1 whitespace-pre-line break-words">' + escHtml(n.body) + '</p>' : '')
+                    + '<p class="text-[11px] text-slate-400 mt-1.5">' + escHtml(notifTimeAgo(n.date)) + '</p>'
+                    + '</div></li>';
+            }).join('');
+        }
+
+        function renderNotifEnable() {
+            const box = document.getElementById('notifEnableBox');
+            const can = ('Notification' in window) && Notification.permission === 'default';
+            box.classList.toggle('hidden', !can);
+        }
+
+        function setNotifications(list, opts) {
+            const prev = new Set(notifItems.map(n => n.id));
+            notifItems = Array.isArray(list) ? list : [];
+            renderNotifBadge();
+            if (!document.getElementById('notifPanel').classList.contains('hidden')) renderNotifList();
+            if (opts && opts.poll) {
+                const seen = getSeenNotifs();
+                const fresh = notifItems.filter(n => !prev.has(n.id) && !seen.has(n.id));
+                if (fresh.length) announceNotif(fresh[0], fresh.length);
+            }
+            startNotifPolling();
+        }
+
+        function toggleNotifPanel(force) {
+            const panel = document.getElementById('notifPanel');
+            const open = force === undefined ? panel.classList.contains('hidden') : force;
+            if (open) {
+                toggleMobileMenu(false);
+                document.getElementById('jbcToast').classList.add('hidden');
+                notifOpenUnread = new Set(notifUnread().map(n => n.id));
+                renderNotifList();
+                renderNotifEnable();
+                const seen = getSeenNotifs();
+                notifItems.forEach(n => seen.add(n.id));
+                saveSeenNotifs(seen);
+                renderNotifBadge();
+            }
+            panel.classList.toggle('hidden', !open);
+            document.getElementById('notifBackdrop').classList.toggle('hidden', !open);
+            document.getElementById('navBellBtn').setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+
+        function showToast(title, body, onClick) {
+            const t = document.getElementById('jbcToast');
+            document.getElementById('jbcToastTitle').textContent = title || '';
+            document.getElementById('jbcToastBody').textContent = body || '';
+            document.getElementById('jbcToastBody').classList.toggle('hidden', !body);
+            t.onclick = () => { t.classList.add('hidden'); if (onClick) onClick(); };
+            t.classList.remove('hidden');
+            clearTimeout(showToast._t);
+            showToast._t = setTimeout(() => t.classList.add('hidden'), 7000);
+        }
+
+        function announceNotif(n, count) {
+            const bell = document.getElementById('navBellBtn');
+            bell.classList.remove('bell-ring'); void bell.offsetWidth; bell.classList.add('bell-ring');
+            showToast(count > 1 ? 'لديك ' + count + ' إشعارات جديدة' : 'إشعار جديد', n.title, () => toggleNotifPanel(true));
+            if (document.hidden && ('Notification' in window) && Notification.permission === 'granted') {
+                const opts = { body: n.title, icon: 'icon-192.png', badge: 'icon-192.png', tag: 'jbc-' + n.id, dir: 'rtl', lang: 'ar' };
+                if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+                    navigator.serviceWorker.ready.then(r => r.showNotification('جبال البصرة', opts)).catch(() => { try { new Notification('جبال البصرة', opts); } catch (e) {} });
+                } else { try { new Notification('جبال البصرة', opts); } catch (e) {} }
+            }
+        }
+
+        function enableDeviceNotifs() {
+            if (!('Notification' in window)) return;
+            Notification.requestPermission().then(p => {
+                renderNotifEnable();
+                if (p === 'granted') showToast('تم تفعيل التنبيهات', 'سيصلك تنبيه على هذا الجهاز عند وصول إشعار جديد.');
+            });
+        }
+
+        async function pollNotifs() {
+            const s = loadSession();
+            if (!s || !currentClient || document.hidden) return;
+            try {
+                const r = await callApi({ notif: s.code, token: s.token });
+                if (r.status === 'success') setNotifications(r.notifications, { poll: true });
+            } catch (e) {}
+        }
+        function startNotifPolling() {
+            if (notifTimer) return;
+            notifTimer = setInterval(pollNotifs, NOTIF_POLL_MS);
+        }
+        function stopNotifs() {
+            clearInterval(notifTimer); notifTimer = null;
+            notifItems = []; notifOpenUnread = new Set();
+            toggleNotifPanel(false);
+            renderNotifBadge();
+        }
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) pollNotifs(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleNotifPanel(false); });
+
         window.addEventListener('DOMContentLoaded', resumeSession);
 </script>
-    <!-- ===== زر تثبيت التطبيق (PWA) ===== -->
+
     <div id="pwaInstallBox" style="display:none" class="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:left-4 sm:max-w-sm z-50 bg-slate-900 text-white rounded-2xl shadow-2xl p-4 flex items-center gap-3 border border-slate-700">
         <img src="icon-192.png" alt="" class="w-12 h-12 rounded-xl flex-shrink-0">
         <div class="flex-1 text-sm">
@@ -1420,7 +1564,6 @@
         <button id="pwaInstallClose" type="button" class="text-slate-400 hover:text-white text-lg px-1" aria-label="إغلاق">&times;</button>
     </div>
 
-    <!-- نافذة طريقة تثبيت التطبيق (تظهر عندما لا يدعم المتصفح التثبيت المباشر) -->
     <div id="pwaHelpModal" style="display:none" class="fixed inset-0 z-[60] bg-black/60 items-end sm:items-center justify-center p-4" onclick="if(event.target===this)jbcCloseInstallHelp()">
         <div class="bg-white text-slate-800 rounded-2xl shadow-2xl w-full max-w-md p-6">
             <div class="flex items-center gap-3 mb-4">
@@ -1436,8 +1579,7 @@
         </div>
     </div>
 
-    <script>
-        (function () {
+    <script>        (function () {
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
             }
@@ -1462,7 +1604,6 @@
             });
             window.addEventListener('appinstalled', function () { deferred = null; hideInstallButtons(); });
 
-            // آيفون: نعرض المربع مرة واحدة لأن Safari لا يدعم زر التثبيت المباشر
             if (isIOS && !isStandalone()) {
                 var d = false; try { d = localStorage.getItem('jbcPwaDismissed') === '1'; } catch (err) {}
                 if (!d) box.style.display = 'flex';
@@ -1477,7 +1618,6 @@
             }
             window.jbcCloseInstallHelp = function () { document.getElementById('pwaHelpModal').style.display = 'none'; };
 
-            // يُستدعى من كل أزرار "حمّل التطبيق"
             window.jbcInstallApp = function () {
                 if (deferred) {
                     deferred.prompt();
@@ -1513,6 +1653,6 @@
                 }
             };
         })();
-    </script>
+</script>
 </body>
 </html>
