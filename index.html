@@ -194,8 +194,8 @@
                         <span id="notifBadge" class="hidden absolute -top-1.5 -left-1.5 min-w-[20px] h-5 px-1 rounded-full bg-orange-500 text-white text-[11px] font-black items-center justify-center ring-2 ring-slate-900">0</span>
                     </button>
 
-                    <button id="navLogoutBtn" onclick="clientLogout()" aria-label="تسجيل خروج" style="display:none;" class="items-center gap-2 bg-white/10 hover:bg-red-600/80 border border-white/25 text-white px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all">
-                        <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden sm:inline">تسجيل خروج</span>
+                    <button id="navLogoutBtn" onclick="askLogout()" aria-label="تسجيل خروج" style="display:none;" class="hidden lg:inline-flex items-center gap-2 bg-white/10 hover:bg-red-600/80 border border-white/25 text-white px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all">
+                        <i class="fa-solid fa-right-from-bracket"></i> <span>تسجيل خروج</span>
                     </button>
 
                     <button id="mobileMenuBtn" type="button" onclick="toggleMobileMenu()" aria-label="القائمة" aria-expanded="false" class="lg:hidden w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-lg">
@@ -214,9 +214,22 @@
                 <a href="#services" onclick="toggleMobileMenu(false)" class="bg-white/5 rounded-xl px-3 py-3 flex items-center gap-2"><i class="fa-solid fa-boxes-stacked text-orange-500"></i> عن الخدمات</a>
                 <a href="#contact" onclick="toggleMobileMenu(false)" class="bg-white/5 rounded-xl px-3 py-3 flex items-center gap-2"><i class="fa-solid fa-headset text-orange-500"></i> اتصل بنا</a>
                 <button type="button" onclick="toggleMobileMenu(false); jbcInstallApp()" class="js-app-install col-span-2 bg-orange-600 hover:bg-orange-700 text-white rounded-xl px-3 py-3 flex items-center justify-center gap-2 font-bold"><i class="fa-solid fa-mobile-screen-button"></i> حمّل تطبيق جبال البصرة</button>
+                <button type="button" id="menuLogoutBtn" onclick="toggleMobileMenu(false); askLogout()" style="display:none;" class="col-span-2 bg-white/5 hover:bg-red-600/80 border border-red-400/40 text-red-300 hover:text-white rounded-xl px-3 py-3 flex items-center justify-center gap-2 font-bold transition-colors"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</button>
             </div>
         </div>
     </nav>
+
+    <div id="logoutConfirm" class="hidden fixed inset-0 z-[80] bg-slate-900/50 flex items-end sm:items-center justify-center p-3" onclick="if(event.target===this) closeLogoutConfirm()">
+        <div role="dialog" aria-modal="true" aria-labelledby="logoutConfirmTitle" class="w-full max-w-sm bg-white rounded-2xl shadow-2xl p-6 text-center animate-fade-in">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-red-50 text-red-600 flex items-center justify-center text-2xl mb-3"><i class="fa-solid fa-right-from-bracket"></i></div>
+            <h3 id="logoutConfirmTitle" class="text-lg font-extrabold text-slate-900">هل تريد تسجيل الخروج؟</h3>
+            <p class="text-sm text-slate-500 mt-1">ستحتاج كود العميل ورمز الدخول للدخول مرة أخرى.</p>
+            <div class="grid grid-cols-2 gap-2 mt-5">
+                <button type="button" onclick="closeLogoutConfirm()" class="py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold">إلغاء</button>
+                <button type="button" onclick="closeLogoutConfirm(); clientLogout()" class="py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold">تسجيل الخروج</button>
+            </div>
+        </div>
+    </div>
 
     <div id="notifBackdrop" class="hidden fixed inset-0 z-[55] bg-slate-900/20 sm:bg-transparent" onclick="toggleNotifPanel(false)"></div>
     <div id="notifPanel" role="dialog" aria-label="الإشعارات" class="hidden fixed z-[60] top-[70px] sm:top-[86px] inset-x-2 sm:inset-x-auto sm:left-6 sm:w-[390px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-fade-in">
@@ -357,6 +370,10 @@
                         <i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول لعرض الشحنات
                     </button>
 
+                    <div class="text-center">
+                        <button type="button" id="loginForgotBtn" onclick="forgotAccess('login')" class="inline-flex items-center gap-1.5 text-sm font-bold text-slate-500 hover:text-orange-600 transition-colors"><i class="fa-brands fa-whatsapp text-green-600"></i> نسيت رمز الدخول أو كود العميل؟</button>
+                    </div>
+
                     <div id="loginErrorBox" class="hidden p-3.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-center text-sm font-semibold"></div>
                     <div id="loginLoadingBox" class="hidden text-center text-slate-500 text-sm py-2">
                         <i class="fa-solid fa-spinner fa-spin ml-1 text-orange-500"></i> جاري التحقق من بيانات العميل...
@@ -381,7 +398,7 @@
                         </div>
                         <div>
                             <label for="regPhone" class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف (واتساب)</label>
-                            <input type="tel" id="regPhone" maxlength="20" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="07xx xxx xxxx" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white text-base text-right">
+                            <input type="tel" id="regPhone" oninput="document.getElementById('regExistsBox').classList.add('hidden')" maxlength="20" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="07xx xxx xxxx" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white text-base text-right">
                         </div>
                         <div>
                             <label for="regAddress" class="block text-xs font-bold text-slate-700 mb-1">العنوان الكامل</label>
@@ -398,6 +415,15 @@
                             <i class="fa-solid fa-paper-plane"></i> تسجيل وإصدار كود العميل
                         </button>
                         <div id="regErrorBox" class="hidden p-3.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-center text-sm font-semibold"></div>
+                        <div id="regExistsBox" class="hidden p-5 bg-amber-50 border border-amber-200 rounded-2xl text-center animate-fade-in">
+                            <div class="w-12 h-12 mx-auto rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-user-check"></i></div>
+                            <h4 class="font-extrabold text-slate-900">لديك حساب بالفعل</h4>
+                            <p class="text-sm text-slate-600 mt-1">رقم الهاتف هذا مسجّل لدينا مسبقاً، سجّل الدخول بكود العميل ورمز الدخول.</p>
+                            <div class="grid gap-2 mt-4">
+                                <button type="button" onclick="openAuth('login')" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</button>
+                                <button type="button" onclick="forgotAccess('register')" class="w-full bg-white hover:bg-green-50 border border-green-200 text-green-700 font-bold py-3 rounded-xl flex items-center justify-center gap-2"><i class="fa-brands fa-whatsapp"></i> نسيت رمز الدخول أو كود العميل؟</button>
+                            </div>
+                        </div>
                         <p class="text-center text-xs text-slate-500">لديك كود مسبقاً؟ <button type="button" onclick="openAuth('login')" class="text-orange-600 font-bold underline">سجّل الدخول</button></p>
                     </div>
                 </div>
@@ -901,7 +927,8 @@
         }
 
         function setLoggedInUI(on) {
-            document.getElementById('navLogoutBtn').style.display = on ? 'inline-flex' : 'none';
+            document.getElementById('navLogoutBtn').style.display = on ? '' : 'none';
+            document.getElementById('menuLogoutBtn').style.display = on ? '' : 'none';
             document.getElementById('navBellBtn').style.display = on ? 'inline-flex' : 'none';
             document.querySelectorAll('.js-guest-only').forEach(el => { el.style.display = on ? 'none' : ''; });
         }
@@ -929,6 +956,8 @@
             if (!isValidClientCode(code) || !isValidPin(pin)) {
                 errorBox.innerText = 'كود العميل أو الرمز السري غير صحيح.';
                 errorBox.classList.remove('hidden');
+                pinInput.value = '';
+                highlightForgot();
                 return;
             }
 
@@ -941,6 +970,9 @@
                 if (result.status !== 'success' || !result.client || !result.token) {
                     errorBox.innerText = result.message || 'كود العميل أو الرمز السري غير صحيح.';
                     errorBox.classList.remove('hidden');
+                    pinInput.value = '';
+                    pinInput.focus();
+                    highlightForgot();
                     return;
                 }
 
@@ -1130,6 +1162,46 @@
             return false;
         }
 
+        function normalizePhone(raw) {
+            let d = normalizeDigits(raw || '').replace(/\D/g, '');
+            if (d.indexOf('00') === 0) d = d.slice(2);
+            if (d.indexOf('9640') === 0) d = '964' + d.slice(4);
+            if (/^07\d{9}$/.test(d)) d = '964' + d.slice(1);
+            else if (/^7\d{9}$/.test(d)) d = '964' + d;
+            return d;
+        }
+        function displayPhone(d) {
+            return /^964\d{10}$/.test(d) ? '0' + d.slice(3) : d;
+        }
+
+        function highlightForgot() {
+            const b = document.getElementById('loginForgotBtn');
+            b.classList.remove('text-slate-500');
+            b.classList.add('text-orange-600', 'underline');
+        }
+
+        function forgotAccess(from) {
+            const lines = ['مرحباً، نسيت رمز الدخول أو كود العميل لحسابي في جبال البصرة 🙏'];
+            if (from === 'register') {
+                const name = document.getElementById('regName').value.trim().replace(/\s+/g, ' ');
+                const ph = normalizePhone(document.getElementById('regPhone').value);
+                if (name) lines.push('الاسم: ' + name);
+                if (ph) lines.push('رقم الهاتف المسجّل: ' + displayPhone(ph));
+            } else {
+                const code = document.getElementById('loginClientCode').value.trim().toUpperCase();
+                if (code && isValidClientCode(code)) lines.push('كود العميل: ' + code);
+            }
+            return openWhatsAppMsg(lines.join('\n'));
+        }
+
+        function askLogout() {
+            document.getElementById('logoutConfirm').classList.remove('hidden');
+        }
+        function closeLogoutConfirm() {
+            document.getElementById('logoutConfirm').classList.add('hidden');
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLogoutConfirm(); });
+
         let registerInFlight = false;
         let lastRegistered = null;
         function normalizeDigits(s) {
@@ -1143,14 +1215,14 @@
         async function registerClient() {
             if (registerInFlight) return;
             const name = document.getElementById('regName').value.trim().replace(/\s+/g, ' ');
-            const phone = normalizeDigits(document.getElementById('regPhone').value).replace(/[^\d+]/g, '');
+            const digits = normalizePhone(document.getElementById('regPhone').value);
             const address = document.getElementById('regAddress').value.trim().replace(/\s+/g, ' ');
             const pin = normalizeDigits(document.getElementById('regPin').value.trim());
             const hp = document.getElementById('regWebsite').value;
             document.getElementById('regErrorBox').classList.add('hidden');
+            document.getElementById('regExistsBox').classList.add('hidden');
 
             if (name.length < 3) return showRegError('الرجاء كتابة الاسم الكامل.');
-            const digits = phone.replace(/\D/g, '');
             if (digits.length < 10 || digits.length > 15) return showRegError('الرجاء كتابة رقم هاتف صحيح (مثال: 07701234567).');
             if (address.length < 5) return showRegError('الرجاء كتابة العنوان الكامل.');
             if (!/^\d{4}$/.test(pin)) return showRegError('رمز الدخول يجب أن يكون 4 أرقام.');
@@ -1162,7 +1234,12 @@
             try {
                 const result = await callApi({ register: '1', name, phone: digits, address, pin, website: hp });
                 if (result.status !== 'success' || !result.code) {
-                    showRegError(result.message || 'تعذّر التسجيل الآن، حاول مرة أخرى.');
+                    if (/مسبقاً|مسبقا/.test(result.message || '')) {
+                        document.getElementById('regExistsBox').classList.remove('hidden');
+                        document.getElementById('regExistsBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    } else {
+                        showRegError(result.message || 'تعذّر التسجيل الآن، حاول مرة أخرى.');
+                    }
                     return;
                 }
                 lastRegistered = result;
