@@ -458,12 +458,19 @@
                             <label class="cursor-pointer"><input type="radio" name="qMethod" value="بري" class="peer sr-only"><span class="block text-center rounded-xl border-2 border-slate-200 bg-white py-3 font-bold text-sm peer-checked:border-orange-500 peer-checked:bg-orange-50 peer-checked:text-orange-700 peer-focus-visible:ring-2 peer-focus-visible:ring-orange-400"><span class="block text-lg mb-1"><i class="fa-solid fa-truck"></i></span>بري</span></label>
                         </div>
                     </div>
+                    <div class="sm:col-span-2 grid grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                        <label for="qFrom" class="block text-xs font-bold text-slate-700 mb-1">الشحن من (اسم البلد)</label>
+                        <label for="qFrom" class="block text-xs font-bold text-slate-700 mb-1">الشحن من (البلد)</label>
                         <input type="text" id="qFrom" list="qCountries" maxlength="40" placeholder="مثال: الصين" class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-orange-500 text-base">
                         <datalist id="qCountries"><option value="الصين"><option value="الإمارات (دبي)"><option value="تركيا"><option value="السعودية"><option value="الأردن"><option value="الهند"></datalist>
                     </div>
                     <div>
+                        <label for="qTo" class="block text-xs font-bold text-slate-700 mb-1">الشحن إلى (المحافظة)</label>
+                        <input type="text" id="qTo" list="qCities" maxlength="40" placeholder="مثال: البصرة" class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-orange-500 text-base">
+                        <datalist id="qCities"><option value="البصرة"><option value="بغداد"><option value="أربيل"><option value="النجف"><option value="كربلاء"><option value="الموصل"><option value="ذي قار"><option value="ميسان"></datalist>
+                    </div>
+                    </div>
+                    <div class="sm:col-span-2">
                         <label for="qGoods" class="block text-xs font-bold text-slate-700 mb-1">نوع البضاعة</label>
                         <input type="text" id="qGoods" maxlength="80" placeholder="مثال: ملابس، قطع غيار، أجهزة طبية" class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-orange-500 text-base">
                     </div>
@@ -1169,16 +1176,17 @@
         function sendQuoteRequest() {
             const method = (document.querySelector('input[name="qMethod"]:checked') || {}).value || '';
             const from = document.getElementById('qFrom').value.trim();
+            const to = document.getElementById('qTo').value.trim();
             const goods = document.getElementById('qGoods').value.trim();
             const cbm = document.getElementById('qCbm').value.trim();
             const kg = document.getElementById('qKg').value.trim();
             const notes = document.getElementById('qNotes').value.trim();
             const err = document.getElementById('quoteErrorBox');
             err.classList.add('hidden');
-            if (!from || !goods) { err.textContent = 'الرجاء كتابة بلد الشحن ونوع البضاعة.'; err.classList.remove('hidden'); return; }
+            if (!from || !to || !goods) { err.textContent = 'الرجاء كتابة الشحن من، الشحن إلى، ونوع البضاعة.'; err.classList.remove('hidden'); return; }
             const s = loadSession();
             const who = document.getElementById('welcomeClientName').textContent;
-            let lines = ['مرحباً، أريد عرض سعر للشحن 📦', '', 'نوع الشحن: ' + method, 'الشحن من: ' + from, 'نوع البضاعة: ' + goods];
+            let lines = ['مرحباً، أريد عرض سعر للشحن 📦', '', 'نوع الشحن: ' + method, 'الشحن من: ' + from, 'الشحن إلى: ' + to, 'نوع البضاعة: ' + goods];
             if (cbm) lines.push('الحجم: ' + cbm + ' CBM');
             if (kg) lines.push('الوزن: ' + kg + ' KG');
             if (notes) lines.push('ملاحظات: ' + notes);
@@ -1191,7 +1199,7 @@
         const SHIP_CODE_PREFIX = 'E22601SAS1074/';
         const UAE_WAREHOUSES = {
             air: {
-                label: 'شحن جوي', icon: 'fa-plane', suffix: 'BYAIR', img: 'shein-air.jpg',
+                label: 'شحن جوي', icon: 'fa-plane', suffix: 'AIR', img: 'shein-air.jpg',
                 fields: [
                     ['Location', 'United Arab Emirates'],
                     ['First Name', '__CODE__'],
@@ -1207,7 +1215,7 @@
                 ]
             },
             land: {
-                label: 'شحن بري', icon: 'fa-truck', suffix: 'BYSEA', img: 'shein-land.jpg',
+                label: 'شحن بري', icon: 'fa-truck', suffix: 'SEA', img: 'shein-land.jpg',
                 fields: [
                     ['Location', 'United Arab Emirates'],
                     ['First Name', '__CODE__'],
@@ -1238,8 +1246,9 @@
             return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
         function shipCodeFor(suffix) {
-            const code = currentClient ? String(currentClient.code).trim() : '';
-            return SHIP_CODE_PREFIX + code + suffix;
+            // نأخذ الأرقام فقط من كود الزبون (مثال: J0210 ← 210)
+            const digits = currentClient ? String(currentClient.code).replace(/\D/g, '').replace(/^0+(?=\d)/, '') : '';
+            return SHIP_CODE_PREFIX + digits + suffix;
         }
 
         function copyText(text, btn) {
@@ -1264,6 +1273,7 @@
         function renderWarehouse(boxId) {
             const box = document.getElementById(boxId);
             if (!box) return;
+            if (!currentClient) { box.innerHTML = ''; box.classList.add('hidden'); return; }
             const st = whState[boxId] || (whState[boxId] = { country: null, method: null, showImg: false });
             const c = st.country ? WH_COUNTRIES[st.country] : null;
 
@@ -1316,8 +1326,8 @@
         function renderUaeAddress(st) {
             const w = UAE_WAREHOUSES[st.method];
             const code = shipCodeFor(w.suffix);
-            const airCode = shipCodeFor('BYAIR');
-            const landCode = shipCodeFor('BYSEA');
+            const airCode = shipCodeFor('AIR');
+            const landCode = shipCodeFor('SEA');
             let h = '';
 
             // رسالة التنبيه + الكود الكامل
