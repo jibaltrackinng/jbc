@@ -138,6 +138,10 @@
         .hero-btn-icon { width:2.5rem; height:2.5rem; border-radius:.75rem; display:flex; align-items:center; justify-content:center; font-size:1.1rem; margin-bottom:.4rem; }
         .hero-btn-title { font-size:.95rem; font-weight:800; line-height:1.3; }
         .hero-btn-sub { font-size:.72rem; font-weight:600; }
+        .hero-actions.is-member { grid-template-columns:repeat(2,minmax(0,1fr)); max-width:36rem; }
+        .hero-actions.is-member .hero-btn { min-height:0; display:grid; grid-template-columns:auto 1fr; column-gap:.75rem; align-items:center; padding:.75rem .9rem; }
+        .hero-actions.is-member .hero-btn-icon { grid-row:span 2; margin:0; width:2.25rem; height:2.25rem; font-size:1rem; }
+        .hero-actions.is-member .hero-btn-title { font-size:.88rem; }
         @media (min-width:640px) { .hero-btn { padding:1.25rem; } .hero-btn-title { font-size:1.05rem; } .hero-btn-sub { font-size:.8rem; } }
 
         .wh-choice { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.25rem; padding:.9rem .4rem; border-radius:1rem; border:2px solid #e2e8f0; background:#fff; font-weight:800; text-align:center; transition:all .15s; }
@@ -271,13 +275,13 @@
                 شحن بحري وجوي وبري إلى البصرة وكل محافظات العراق، شحن طلبات شي إن من دبي، تخليص جمركي، ومستودعات استلام في الصين ودبي، مع تتبع شحناتك أونلاين.
             </p>
 
-            <div class="hero-actions grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto text-right">
-                <button type="button" onclick="openAuth('login')" class="hero-btn bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/30">
+            <div id="heroActions" class="hero-actions grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto text-right">
+                <button type="button" onclick="openAuth('login')" class="js-guest-only hero-btn bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/30">
                     <span class="hero-btn-icon bg-white/20"><i class="fa-solid fa-right-to-bracket"></i></span>
                     <span class="hero-btn-title">تسجيل الدخول</span>
                     <span class="hero-btn-sub text-orange-100">تتبّع شحناتك</span>
                 </button>
-                <button type="button" onclick="openAuth('register')" class="hero-btn bg-white text-slate-900 hover:bg-slate-100">
+                <button type="button" onclick="openAuth('register')" class="js-guest-only hero-btn bg-white text-slate-900 hover:bg-slate-100">
                     <span class="hero-btn-icon bg-orange-100 text-orange-600"><i class="fa-solid fa-user-plus"></i></span>
                     <span class="hero-btn-title">سجّل معنا</span>
                     <span class="hero-btn-sub text-slate-500">عميل جديد</span>
@@ -477,6 +481,7 @@
                         <h4 class="text-lg font-bold text-slate-900">الشحنات المسلَّمة سابقاً</h4>
                     </div>
                     <div id="deliveredShipmentsList" class="space-y-3"></div>
+                    <button type="button" id="deliveredMoreBtn" onclick="toggleDeliveredMore()" class="hidden w-full mt-3 py-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-bold text-slate-700 flex items-center justify-center gap-2"></button>
                     <div id="noDeliveredShipmentsMsg" class="hidden bg-white rounded-2xl p-8 text-center border border-slate-200 text-slate-500 text-sm">
                         <i class="fa-solid fa-circle-check text-3xl text-slate-300 mb-2 block"></i>
                         لا توجد شحنات مسلَّمة سابقاً.
@@ -653,17 +658,18 @@
     </template>
 
     <template id="deliveredShipmentTemplate">
-        <div class="bg-white rounded-xl border border-emerald-200 p-4 flex items-center justify-between shadow-sm hover:shadow transition-all">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base">
-                    <i class="fa-solid fa-box-check"></i>
+        <div class="bg-white rounded-xl border border-emerald-200 p-4 flex items-center justify-between gap-3 shadow-sm hover:shadow transition-all">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 shrink-0 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base">
+                    <i class="fa-solid fa-box"></i>
                 </div>
-                <div>
+                <div class="min-w-0">
                     <span class="font-bold text-slate-900 text-sm sm:text-base js-ref"></span>
                     <span class="block text-xs text-slate-500 js-method"></span>
+                    <span class="block text-[11px] text-slate-600 mt-1 truncate js-summary"></span>
                 </div>
             </div>
-            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1">
+            <span class="shrink-0 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1">
                 <i class="fa-solid fa-circle-check"></i> تم التسليم
             </span>
         </div>
@@ -929,6 +935,7 @@
         function setLoggedInUI(on) {
             document.getElementById('navLogoutBtn').style.display = on ? '' : 'none';
             document.getElementById('menuLogoutBtn').style.display = on ? '' : 'none';
+            document.getElementById('heroActions').classList.toggle('is-member', on);
             document.getElementById('navBellBtn').style.display = on ? 'inline-flex' : 'none';
             document.querySelectorAll('.js-guest-only').forEach(el => { el.style.display = on ? 'none' : ''; });
         }
@@ -1017,6 +1024,7 @@
             clearSession();
             document.getElementById('activeShipmentsList').innerHTML = '';
             document.getElementById('deliveredShipmentsList').innerHTML = '';
+            document.getElementById('deliveredMoreBtn').classList.add('hidden');
             document.getElementById('welcomeClientName').textContent = '-';
             document.getElementById('clientDashboard').style.display = 'none';
             document.getElementById('loginCard').style.display = 'none';
@@ -1065,7 +1073,26 @@
             else noDeliveredMsg.classList.add('hidden');
 
             active.forEach(s => renderActiveShipmentCard(s, activeList));
-            delivered.slice().reverse().forEach(s => renderDeliveredShipmentCard(s, deliveredList));
+            delivered.slice().reverse().forEach((s, i) => renderDeliveredShipmentCard(s, deliveredList, i >= DELIVERED_PREVIEW));
+            deliveredExpanded = false;
+            updateDeliveredMoreBtn(delivered.length);
+        }
+
+        const DELIVERED_PREVIEW = 3;
+        let deliveredExpanded = false;
+        function updateDeliveredMoreBtn(total) {
+            const btn = document.getElementById('deliveredMoreBtn');
+            const extra = total - DELIVERED_PREVIEW;
+            btn.classList.toggle('hidden', extra <= 0);
+            btn.innerHTML = deliveredExpanded
+                ? '<i class="fa-solid fa-chevron-up"></i> عرض أقل'
+                : '<i class="fa-solid fa-chevron-down"></i> عرض المزيد (' + extra + ')';
+        }
+        function toggleDeliveredMore() {
+            deliveredExpanded = !deliveredExpanded;
+            const items = document.querySelectorAll('#deliveredShipmentsList > .js-delivered-item');
+            items.forEach((el, i) => el.classList.toggle('hidden', !deliveredExpanded && i >= DELIVERED_PREVIEW));
+            updateDeliveredMoreBtn(items.length);
         }
 
         function renderActiveShipmentCard(shipment, container) {
@@ -1119,11 +1146,21 @@
             container.appendChild(node);
         }
 
-        function renderDeliveredShipmentCard(shipment, container) {
+        function renderDeliveredShipmentCard(shipment, container, hide) {
             const tpl = document.getElementById('deliveredShipmentTemplate');
             const node = tpl.content.cloneNode(true);
+            const root = node.firstElementChild;
+            root.classList.add('js-delivered-item');
+            if (hide) root.classList.add('hidden');
             node.querySelector('.js-ref').textContent = shipment.ref || '-';
             node.querySelector('.js-method').textContent = shipment.method || '-';
+            const parts = [];
+            if (parseFloat(shipment.cbm)) parts.push('\u2066' + shipment.cbm + ' CBM\u2069');
+            if (parseFloat(shipment.kg)) parts.push('\u2066' + shipment.kg + ' KG\u2069');
+            const mat = (shipment.material || '').toString().trim();
+            if (mat) parts.push(mat);
+            const sum = node.querySelector('.js-summary');
+            if (parts.length) { sum.textContent = parts.join(' · '); sum.title = parts.join(' · '); } else sum.remove();
             container.appendChild(node);
         }
 
