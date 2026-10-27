@@ -1,7 +1,7 @@
 // Service Worker لتطبيق جبال البصرة (JBC)
 // يحفظ ملفات الموقع فقط ليفتح بسرعة. طلبات Google Apps Script (الشحنات والدخول) لا تُحفظ أبداً.
-const CACHE = 'jbc-v6';
-const CORE = ['./', './index.html', './logo.png', './icon-192.png', './icon-512.png', './manifest.json'];
+const CACHE = 'jbc-v7';
+const CORE = ['./', './index.html', './privacy.html', './logo.png', './icon-192.png', './icon-512.png', './manifest.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
