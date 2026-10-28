@@ -5,27 +5,92 @@
   "description": "تتبع شحناتك مع جبال البصرة للشحن والتجارة العامة: شحن بحري وجوي وبري من الصين والإمارات وتركيا إلى العراق.",
   "lang": "ar",
   "dir": "rtl",
-  "start_url": "/jbc/",
-  "scope": "/jbc/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
-  "categories": ["business", "shopping", "productivity"],
+  "categories": [
+    "business",
+    "shopping",
+    "productivity"
+  ],
   "prefer_related_applications": false,
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
-    { "name": "تتبع شحناتي", "short_name": "شحناتي", "url": "/jbc/#track", "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }] },
-    { "name": "طلب عرض كلفة شحن", "short_name": "عرض سعر", "url": "/jbc/#quote", "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }] }
+    {
+      "name": "تتبع شحناتي",
+      "short_name": "شحناتي",
+      "url": "/#track",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "طلب عرض كلفة شحن",
+      "short_name": "عرض سعر",
+      "url": "/#quote",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
   ],
   "screenshots": [
-    { "src": "screenshots/home.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "الصفحة الرئيسية" },
-    { "src": "screenshots/tracking.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "تتبع مراحل الشحنة" },
-    { "src": "screenshots/history.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "سجل الشحنات المسلّمة" },
-    { "src": "screenshots/desktop.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide", "label": "جبال البصرة على الحاسوب" }
+    {
+      "src": "screenshots/home.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "الصفحة الرئيسية"
+    },
+    {
+      "src": "screenshots/tracking.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "تتبع مراحل الشحنة"
+    },
+    {
+      "src": "screenshots/history.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "سجل الشحنات المسلّمة"
+    },
+    {
+      "src": "screenshots/desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "جبال البصرة على الحاسوب"
+    }
   ]
 }
