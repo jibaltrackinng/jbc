@@ -1508,6 +1508,7 @@
 
             h += '<div class="rounded-2xl border-2 border-red-200 bg-red-50 p-4 mb-3">'
                + '<div class="flex items-start gap-2 text-red-700 font-extrabold text-sm leading-relaxed"><span class="text-base leading-none mt-0.5">🟥</span><span>استبدل كود الشحن الموجود في خانة الاسم الأول (First Name) بالكود الخاص بك</span></div>'
+               + '<div class="flex items-start gap-2 text-red-700 font-extrabold text-sm leading-relaxed mt-2"><span class="text-base leading-none mt-0.5">⚠️</span><span>شحن البضائع العادية فقط</span></div>'
                + '<div class="mt-3">' + codeChip(w.label, code, true) + '</div></div>';
 
             h += '<img src="' + w.img + '" alt="مثال توضيحي لعنوان SHEIN ' + w.label + '" loading="lazy" class="w-full rounded-2xl border border-slate-200 shadow-sm">'
@@ -1535,7 +1536,7 @@
                 h += '<div class="flex items-start gap-2 text-red-700 font-extrabold text-sm leading-relaxed"><span class="text-base leading-none mt-0.5">⚠️</span><span>' + escHtml(n) + '</span></div>';
             });
             h += '</div>';
-            h += '<div class="mb-3">' + codeChip('علامة الشحن (اسم المستودع \\ كود العميل)', mark, true) + '</div>';
+            h += '<div class="mb-3">' + codeChip('علامة الشحن', mark, true) + '</div>';
             h += '<div class="text-sm font-extrabold text-slate-800 mb-2"><i class="fa-solid fa-location-dot text-orange-500 ml-1"></i> عنوان المستودع (' + c.label + ' — ' + m.label + ')</div>'
                + '<div class="rounded-2xl border-2 border-slate-200 bg-white p-4">'
                + '<p dir="ltr" class="text-left font-black text-orange-600 text-base sm:text-lg tracking-wide mb-2 select-all">' + escHtml(mark) + '</p>'
